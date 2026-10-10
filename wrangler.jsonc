@@ -1,0 +1,31 @@
+{
+  // Single source of truth for the deploy target and the Cloudflare bindings.
+  //
+  // Nitro's cloudflare preset generates `.output/server/wrangler.json` (it supplies
+  // `main`, `assets` and the compatibility settings itself). `scripts/patch-wrangler.mjs`
+  // re-stamps the values below onto the generated config after every build.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "champs-construction",
+
+  // Pinned: nitro would otherwise stamp the build date, which can be newer than the
+  // local workerd runtime supports.
+  "compatibility_date": "2026-10-01",
+
+  "routes": [{ "pattern": "champs.digitsdigital.co.zw", "custom_domain": true }],
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "champs-construction",
+      "database_id": "18da21e6-3f26-4436-8c81-2ec5dfbaf942",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "champs-construction-media"
+    }
+  ]
+}
