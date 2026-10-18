@@ -33,9 +33,9 @@ export function CtaBand() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-6 text-base leading-relaxed text-white/80 sm:text-lg">
-              We can supply the materials and do all the construction work, or manage your project
-              with the materials you already have, and keep you updated every week until you have
-              the keys in your hands. Tell us about your stand and we'll take it from there.
+              A full turnkey build, a supervised labour team for your own materials, or independent
+              management of your build: whichever you choose, you are kept updated every step of
+              the way. Tell us about your stand and we'll take it from there.
             </p>
           </Reveal>
           <Reveal delay={240}>

@@ -19,7 +19,8 @@ export const buildTypes = [
   "New house",
   "Extension",
   "Finishing an existing structure",
-  "Manage my build (I have materials)",
+  "Labour only (I have materials)",
+  "Project management of my build",
   "Not sure",
 ] as const;
 export const budgets = ["Under $15k", "$15k–$30k", "$30k–$60k", "$60k+", "Not sure"] as const;

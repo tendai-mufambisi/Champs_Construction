@@ -5,6 +5,7 @@ import { Burbs } from "@/components/sections/Burbs";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
 import { Hero } from "@/components/sections/Hero";
+import { ServiceModels } from "@/components/sections/ServiceModels";
 import { Services } from "@/components/sections/Services";
 import { Team } from "@/components/sections/Team";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -64,6 +65,7 @@ function Index() {
       <Hero />
       <WorkStrip />
       <About />
+      <ServiceModels />
       <Services />
       <FeaturedProjects />
       <Team />

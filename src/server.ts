@@ -107,6 +107,7 @@ const STATIC_ROUTES: [path: string, changefreq: string, priority: string][] = [
   ["/", "weekly", "1.0"],
   ["/projects", "weekly", "0.9"],
   ["/services", "monthly", "0.8"],
+  ["/labour-only", "monthly", "0.8"],
   ["/about", "monthly", "0.7"],
   ["/contact", "yearly", "0.6"],
 ];

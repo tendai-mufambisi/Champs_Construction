@@ -76,6 +76,11 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link to="/labour-only" className="transition-colors hover:text-accent-gold">
+                  Labour-Only Contracting
+                </Link>
+              </li>
             </ul>
           </div>
 

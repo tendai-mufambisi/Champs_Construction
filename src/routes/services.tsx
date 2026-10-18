@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { Faq } from "@/components/sections/Faq";
 import { Process } from "@/components/sections/Process";
+import { ServiceModels } from "@/components/sections/ServiceModels";
 import { Services } from "@/components/sections/Services";
 import { Transformation } from "@/components/sections/Transformation";
 import { WhyUs } from "@/components/sections/WhyUs";
@@ -12,7 +13,7 @@ import { breadcrumbLd, canonical, pageMeta } from "@/lib/seo";
 
 const title = "Construction Services in Zimbabwe | Champs Construction";
 const description =
-  "Project management, planning and design, site clearance, foundations, roofing, plumbing, electrical, tiling, painting and materials supply. Champs Construction builds and manages homes from the stand to the keys.";
+  "Full turnkey builds, labour-only contracting and independent project management in Zimbabwe, plus planning, foundations, roofing, plumbing, electrical, tiling and finishes. Champs Construction, from the stand to the keys.";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/services")({
       description,
       path: "/services",
       keywords:
-        "construction services Harare, building contractor Zimbabwe, construction project management Zimbabwe, house construction services, roofing plumbing electrical Zimbabwe, turnkey builder",
+        "construction services Harare, building contractor Zimbabwe, construction project management Zimbabwe, labour only builders Zimbabwe, house construction services, roofing plumbing electrical Zimbabwe, turnkey builder",
     }),
     links: canonical("/services"),
     scripts: [
@@ -53,13 +54,14 @@ function ServicesPage() {
           <Reveal delay={160}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
               You do not need to line up a builder, a plumber, an electrician and a roofer
-              yourself. Champs Construction manages the whole build, with our materials or yours,
-              and hands you a finished house.
+              yourself. Champs Construction builds turnkey, supplies supervised labour teams for
+              your own materials, or manages your project independently on site.
             </p>
           </Reveal>
         </div>
       </section>
 
+      <ServiceModels />
       <Services />
       <Process />
       <Transformation />

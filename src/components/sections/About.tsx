@@ -81,9 +81,9 @@ export function About() {
                   accountable team committed to delivering quality on schedule and within budget.
                 </p>
                 <p>
-                  Already bought your materials? We can run the project for you on the ground,
-                  managing the labour, the work and the quality checks, so your build moves forward
-                  properly even when you can't be there.
+                  Already bought your materials? Our foreman-led labour teams build with them. Already
+                  have a builder? Our independent project managers check the work for you, so your
+                  build moves forward properly even when you can't be there.
                 </p>
               </div>
             </Reveal>

@@ -91,8 +91,8 @@ export const trustPillars = [
   },
   {
     icon: "KeyRound",
-    title: "Turnkey Or Managed Builds",
-    body: "We can supply the materials, do all the construction work and hand over a finished home, or manage the build on the ground with materials you already have.",
+    title: "Three Ways To Build",
+    body: "A full turnkey build, supervised labour teams for clients with their own materials, or independent management of a build already underway.",
   },
 ];
 
@@ -118,7 +118,7 @@ export const services = [
   {
     icon: "ClipboardCheck",
     title: "Project Management",
-    body: "A dedicated project manager runs your build on the ground, with our materials or yours, and reports progress to you wherever you are.",
+    body: "Independent, on-site oversight of your build: quality checks against the drawings, materials reconciled and verified progress reports before each stage payment.",
   },
   {
     icon: "DraftingCompass",
@@ -163,7 +163,7 @@ export const services = [
   {
     icon: "Truck",
     title: "Materials Supply",
-    body: "We source and supply the building materials, or work with the ones you have already bought.",
+    body: "We source and supply the materials on turnkey builds, or our labour teams build with the materials you supply.",
   },
 ];
 
@@ -177,7 +177,7 @@ export const process = [
   {
     step: "02",
     title: "Planning & Quotation",
-    body: "Plans, approvals guidance and a clear quote.",
+    body: "Plans, approvals guidance and a comprehensive Bill of Quantities.",
   },
   {
     step: "03",
@@ -235,11 +235,19 @@ export const faqs = [
   },
   {
     q: "Do you supply the building materials?",
-    a: "Yes, we can supply everything and take the build all the way to handover. If you have already bought your materials, we can also manage the project for you: the labour, the supervision and the quality checks, with regular progress reports.",
+    a: "Yes, on a full turnkey build we source and supply everything and take the build all the way to handover. If you have already bought your materials, our labour-only teams build with them under a site foreman, on fixed milestone pricing.",
+  },
+  {
+    q: "Do you charge for quotations and Bills of Quantities (BOQs)?",
+    a: "Initial consultations and ballpark estimates are free. A Comprehensive Bill of Quantities starts from $50 USD, depending on the size and scope of your architectural plans. It is an item-by-item technical audit of exact material volumes, structural schedules and labour requirements, prepared by our estimators and delivered within 3 working days. Best of all: if you choose to build with Champs Construction, 100% of the fee is deducted from your first deposit, so it costs you nothing when you build with us.",
+  },
+  {
+    q: "I already have a builder. Can you still help?",
+    a: "Yes. Our independent project management puts Champs on site for you: we check the work against the engineering drawings, reconcile the materials delivered, track the schedule and send verified progress reports before you release each stage payment.",
   },
   {
     q: "What services do you offer?",
-    a: "Project management, planning and design, site preparation and clearance, foundations and framing, roofing, plumbing, electrical installations, tiling, painting and finishes, materials supply and handover to the owner.",
+    a: "Three service models: full turnkey (fix and supply), labour-only contracting and independent project management. Within those: planning and design, site preparation and clearance, foundations and framing, roofing, plumbing, electrical installations, tiling, painting and finishes, materials supply and handover to the owner.",
   },
   {
     q: "I don't have a stand yet. Can you help?",
@@ -250,3 +258,107 @@ export const faqs = [
     a: "Fill in the build enquiry form on this page or message us on WhatsApp. Tell us where your stand is, what you want to build and your budget, and we will arrange a consultation.",
   },
 ];
+
+// The three ways to engage Champs, as set out by the owner. Shown on the home
+// page and /services; labour-only has its own page.
+export const serviceModels = [
+  {
+    icon: "KeyRound",
+    title: "Fix & Supply",
+    tag: "Full Turnkey",
+    body: "A complete, hands-off solution. Champs manages the entire build from start to finish, including council approvals, material sourcing, site construction and dedicated milestone reporting until key handover.",
+    idealFor: "Diaspora clients and busy professionals seeking a single accountable builder.",
+    link: null,
+  },
+  {
+    icon: "HardHat",
+    title: "Labour-Only Contracting",
+    tag: "Your materials",
+    body: "Vetted, foreman-led artisan teams (bricklayers, carpenters, plasterers and more) for clients who supply their own materials. Minimal material waste, structural accuracy and fixed milestone pricing instead of unpredictable daily rates.",
+    idealFor: "Clients who prefer to buy and supply their own building materials.",
+    link: "/labour-only",
+  },
+  {
+    icon: "ClipboardCheck",
+    title: "Independent Project Management",
+    tag: "Your contractor",
+    body: "Impartial on-site representation. Champs audits construction quality against the engineering drawings, reconciles delivered materials, tracks the schedule and provides verified progress reports before stage payments are released to third parties.",
+    idealFor: "Clients who already have contractors or family handling the build.",
+    link: null,
+  },
+] as const;
+
+export const labourWhatsappText =
+  "Hi Champs Construction, I have my materials and I'd like a quote for a labour-only team.";
+
+// /labour-only, as supplied by the owner.
+export const labourOnly = {
+  eyebrow: "Labour-Only Contracting & Skilled Trades",
+  title: "Your Materials. Our Skilled Craftsmanship. Supervised to Perfection.",
+  intro:
+    "If you prefer to purchase and supply your own building materials, you still deserve reliable, high-calibre construction. Champs Construction provides experienced, vetted and fully supervised trade teams to execute your residential build from the ground up, with zero compromise on structural integrity.",
+  pitfalls:
+    "We eliminate the common pitfalls of hiring casual builders: no absentee artisans, no unmeasured material waste and no cutting corners. Every team we deploy works under the direct leadership of an on-site supervisor, ensuring your architectural plans are executed accurately, safely and on schedule.",
+  provide: [
+    {
+      icon: "Users",
+      title: "Foreman-Led Artisan Teams",
+      body: "Every project is assigned qualified bricklayers, steel-fixers, carpenters, plasterers and plumbers, led by a dedicated site foreman who manages daily output and quality control.",
+    },
+    {
+      icon: "Milestone",
+      title: "Milestone-Based Contracts",
+      body: "No unpredictable daily charges or open-ended timelines. We agree fixed milestone pricing tied to measurable completion stages: footing, slab, brickwork to wall plate, roof structure and plastering.",
+    },
+    {
+      icon: "Recycle",
+      title: "Material Stewardship & Efficiency",
+      body: "We treat your supplies with extreme care. Our artisans work to minimise off-cuts, reduce breakage and prevent site wastage, protecting your investment in materials.",
+    },
+    {
+      icon: "FileCheck",
+      title: "Plan & Engineering Compliance",
+      body: "Work is completed strictly to your approved architectural and structural engineering specifications, so council inspections pass without costly rectifications.",
+    },
+  ],
+  stages: [
+    {
+      title: "Substructure & Groundwork",
+      body: "Setting out, trench excavation, footings, foundation brickwork, backfilling and slab pouring.",
+    },
+    {
+      title: "Superstructure",
+      body: "Load-bearing brickwork, reinforcement beams, lintels and gable walls up to wall plate level.",
+    },
+    {
+      title: "Roofing & Trusses",
+      body: "Fabrication and installation of timber or light-gauge steel trusses, battens, and sheeting or tiles.",
+    },
+    {
+      title: "Plastering, Screeding & Finishes",
+      body: "Rough casting, interior and exterior plastering, floor screeds, tiling and ceiling installation.",
+    },
+    {
+      title: "Plumbing & Electrical Rough-Ins",
+      body: "Conduit laying, pipe runs and pre-plaster services installation.",
+    },
+  ],
+  steps: [
+    {
+      title: "Plan & Bill Review",
+      body: "Share your approved drawings and project details so we can assess the scope of labour required.",
+    },
+    {
+      title: "Fixed Milestone Quotation",
+      body: "A clear quotation broken down by build stage, with defined timeframes.",
+    },
+    {
+      title: "Mobilisation & Execution",
+      body: "Once materials are ready on site, our team deploys with tools and supervisory oversight.",
+    },
+    {
+      title: "Stage Handover",
+      body: "Work is inspected and approved at each milestone before moving to the next phase.",
+    },
+  ],
+};

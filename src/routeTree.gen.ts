@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as LabourOnlyRouteImport } from './routes/labour-only'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
@@ -39,6 +40,11 @@ const AboutRoute = AboutRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabourOnlyRoute = LabourOnlyRouteImport.update({
+  id: '/labour-only',
+  path: '/labour-only',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/labour-only': typeof LabourOnlyRoute
   '/services': typeof ServicesRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/labour-only': typeof LabourOnlyRoute
   '/services': typeof ServicesRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/labour-only': typeof LabourOnlyRoute
   '/services': typeof ServicesRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/labour-only'
     | '/services'
     | '/admin/enquiries'
     | '/admin/login'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/labour-only'
     | '/services'
     | '/admin/enquiries'
     | '/admin/login'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/labour-only'
     | '/services'
     | '/admin/enquiries'
     | '/admin/login'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  LabourOnlyRoute: typeof LabourOnlyRoute
   ServicesRoute: typeof ServicesRoute
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminLoginRoute: typeof AdminLoginRoute
@@ -259,6 +272,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/labour-only': {
+      id: '/labour-only'
+      path: '/labour-only'
+      fullPath: '/labour-only'
+      preLoaderRoute: typeof LabourOnlyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -359,6 +379,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  LabourOnlyRoute: LabourOnlyRoute,
   ServicesRoute: ServicesRoute,
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminLoginRoute: AdminLoginRoute,
