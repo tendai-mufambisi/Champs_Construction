@@ -16,9 +16,9 @@ import { canonical, pageMeta } from "@/lib/seo";
 
 const title = "Champs Construction | Building Partners You Can Trust";
 const description =
-  "Turnkey home construction in Zimbabwe. Champs Construction handles planning, materials, building and handover in Harare and beyond, with one accountable team from quotation to keys.";
+  "Turnkey home construction and project management in Zimbabwe. Champs Construction builds or manages your home from groundwork to handover, with one accountable team, even when you are not on the ground.";
 const keywords =
-  "construction company Harare, home builders Zimbabwe, turnkey construction Zimbabwe, build a house in Zimbabwe, Chivhu stands, Champs Construction";
+  "construction company Harare, home builders Zimbabwe, turnkey construction Zimbabwe, construction project management Zimbabwe, build a house in Zimbabwe, Chivhu stands, Champs Construction";
 
 export const Route = createFileRoute("/")({
   head: () => ({

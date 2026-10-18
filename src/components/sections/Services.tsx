@@ -22,7 +22,7 @@ export function Services() {
           <SectionHeading
             eyebrow="Our Services"
             title="Everything from the stand to the keys"
-            subtitle="We do everything from supplying materials and all construction work until you have the keys in your hands — handled by one accountable team."
+            subtitle="From supplying materials and all the construction work to managing your project on the ground, everything until you have the keys in your hands is handled by one accountable team."
             tone="dark"
             align="left"
           />

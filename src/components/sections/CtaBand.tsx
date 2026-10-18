@@ -22,7 +22,7 @@ export function CtaBand() {
           <Reveal>
             <span className="eyebrow text-accent-gold">
               <span className="h-[3px] w-8 rounded-full bg-current" aria-hidden />
-              Turnkey Construction
+              Turnkey Construction & Project Management
             </span>
           </Reveal>
           <Reveal delay={80}>
@@ -33,9 +33,9 @@ export function CtaBand() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-6 text-base leading-relaxed text-white/80 sm:text-lg">
-              We supply the materials, do all the construction work and keep you updated every week
-              until you have the keys in your hands. Tell us about your stand and we'll take it from
-              there.
+              We can supply the materials and do all the construction work, or manage your project
+              with the materials you already have, and keep you updated every week until you have
+              the keys in your hands. Tell us about your stand and we'll take it from there.
             </p>
           </Reveal>
           <Reveal delay={240}>

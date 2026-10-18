@@ -26,7 +26,7 @@ export function Footer() {
             />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/65">
               Harare-based residential construction for Zimbabweans at home and in the diaspora.
-              From materials to the keys in your hands. Building partners you can trust.
+              From groundwork to handover, built and managed by one accountable team.
             </p>
             <p className="mt-5 font-display text-xl font-semibold text-accent-gold">
               {company.tagline}

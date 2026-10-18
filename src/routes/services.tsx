@@ -12,7 +12,7 @@ import { breadcrumbLd, canonical, pageMeta } from "@/lib/seo";
 
 const title = "Construction Services in Zimbabwe | Champs Construction";
 const description =
-  "Planning and design, site clearance, foundations, roofing, plumbing, electrical, tiling, painting and materials supply. Champs Construction takes a build from the stand to the keys.";
+  "Project management, planning and design, site clearance, foundations, roofing, plumbing, electrical, tiling, painting and materials supply. Champs Construction builds and manages homes from the stand to the keys.";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/services")({
       description,
       path: "/services",
       keywords:
-        "construction services Harare, building contractor Zimbabwe, house construction services, roofing plumbing electrical Zimbabwe, turnkey builder",
+        "construction services Harare, building contractor Zimbabwe, construction project management Zimbabwe, house construction services, roofing plumbing electrical Zimbabwe, turnkey builder",
     }),
     links: canonical("/services"),
     scripts: [
@@ -53,7 +53,8 @@ function ServicesPage() {
           <Reveal delay={160}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
               You do not need to line up a builder, a plumber, an electrician and a roofer
-              yourself. Champs Construction handles the whole build and hands you a finished house.
+              yourself. Champs Construction manages the whole build, with our materials or yours,
+              and hands you a finished house.
             </p>
           </Reveal>
         </div>

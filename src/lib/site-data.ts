@@ -50,7 +50,7 @@ export type NavLink = (typeof navLinks)[number];
 
 // Hero trust strip.
 export const trustBadges = [
-  "Materials Supplied",
+  "Full Project Management",
   "Turnkey Handover",
   "Fixed, Written Quotations",
 ];
@@ -91,8 +91,8 @@ export const trustPillars = [
   },
   {
     icon: "KeyRound",
-    title: "Full Turnkey Service",
-    body: "We supply the materials, do all the construction work and hand over a finished home: from materials supply to keys in your hands.",
+    title: "Turnkey Or Managed Builds",
+    body: "We can supply the materials, do all the construction work and hand over a finished home, or manage the build on the ground with materials you already have.",
   },
 ];
 
@@ -106,7 +106,7 @@ export const comparison = {
     title: "With Champs",
     points: [
       "One accountable team",
-      "Materials handled",
+      "Your build managed on the ground",
       "Transparent progress",
       "Fixed written quotations",
       "Keys on handover",
@@ -115,6 +115,11 @@ export const comparison = {
 };
 
 export const services = [
+  {
+    icon: "ClipboardCheck",
+    title: "Project Management",
+    body: "A dedicated project manager runs your build on the ground, with our materials or yours, and reports progress to you wherever you are.",
+  },
   {
     icon: "DraftingCompass",
     title: "Planning & Design",
@@ -158,12 +163,7 @@ export const services = [
   {
     icon: "Truck",
     title: "Materials Supply",
-    body: "We supply the building materials, so you don't have to manage suppliers from abroad.",
-  },
-  {
-    icon: "KeyRound",
-    title: "Handover To Owner",
-    body: "A final inspection together, then the keys in your hands.",
+    body: "We source and supply the building materials, or work with the ones you have already bought.",
   },
 ];
 
@@ -231,15 +231,15 @@ export const faqs = [
   },
   {
     q: "I live outside Zimbabwe. Can you build my house for me?",
-    a: "Yes. We handle the materials, the construction and the handover here in Zimbabwe, and keep you updated so you can follow the build from wherever you live.",
+    a: "Yes. We manage the build on the ground here in Zimbabwe, from materials and construction to handover, and send you structured progress reports so you can follow it from wherever you live.",
   },
   {
     q: "Do you supply the building materials?",
-    a: "Yes. We do everything from supplying materials and all construction work until you have the keys in your hands.",
+    a: "Yes, we can supply everything and take the build all the way to handover. If you have already bought your materials, we can also manage the project for you: the labour, the supervision and the quality checks, with regular progress reports.",
   },
   {
     q: "What services do you offer?",
-    a: "Planning and design, site preparation and clearance, foundations and framing, roofing, plumbing, electrical installations, tiling, painting and finishes, materials supply and handover to the owner.",
+    a: "Project management, planning and design, site preparation and clearance, foundations and framing, roofing, plumbing, electrical installations, tiling, painting and finishes, materials supply and handover to the owner.",
   },
   {
     q: "I don't have a stand yet. Can you help?",

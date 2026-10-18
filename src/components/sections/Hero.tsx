@@ -129,9 +129,9 @@ export function Hero() {
 
         <Reveal delay={200}>
           <p className="mt-7 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
-            Building in Zimbabwe, at home or from abroad? Champs Construction handles
-            everything — from materials to the keys in your hands — with one accountable team at
-            every stage.
+            Building in Zimbabwe, at home or from abroad? Champs Construction builds and manages
+            your project from groundwork to handover, so it runs properly even when you are not on
+            the ground, with one accountable team at every stage.
           </p>
         </Reveal>
 

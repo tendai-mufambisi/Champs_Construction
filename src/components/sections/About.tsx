@@ -5,17 +5,17 @@ const pillars = [
   {
     icon: Target,
     title: "Our Mission",
-    body: "To turn a stand into a finished home for Zimbabweans at home and abroad, handling the hard work and keeping the client informed at every stage.",
+    body: "To deliver seamless, turnkey residential construction through transparent project management, uncompromising structural standards and dependable client communication, bridging the distance for Zimbabweans building at home from anywhere in the world.",
   },
   {
     icon: Eye,
-    title: "Our Promise",
-    body: "From site clearance until we hand you the keys, with one accountable team and every stage signed off before the next begins.",
+    title: "Our Vision",
+    body: "To become the most trusted residential construction partner in Zimbabwe, recognised locally and across the diaspora for integrity, operational excellence and lasting architectural value.",
   },
   {
     icon: ShieldCheck,
     title: "How We Work",
-    body: "Professional, transparent and accountable: quality control at every stage and the client engaged throughout the project.",
+    body: "Professional, transparent and accountable. Whether we supply everything or manage the build with your materials, every stage is quality-checked and you stay engaged throughout.",
   },
 ];
 
@@ -64,21 +64,26 @@ export function About() {
             </Reveal>
             <Reveal delay={80}>
               <h2 className="mt-4 text-3xl leading-tight font-semibold text-brand-ink sm:text-4xl lg:text-5xl">
-                Your stand. Your home. Our hard work.
+                From Groundwork to Handover. Built With Integrity.
               </h2>
             </Reveal>
             <Reveal delay={140}>
               <div className="mt-6 space-y-4 leading-relaxed text-muted-foreground">
                 <p>
-                  Champs Construction is a Harare-based residential construction company founded by
-                  Mr. Regai. We help Zimbabweans at home and abroad turn a stand into a finished
-                  home — handling planning, materials, construction and handover, while keeping the
-                  client informed at every stage.
+                  Champs Construction is a premier Harare residential builder dedicated to turning
+                  your vision into a turnkey home. Whether you are based locally or in the diaspora,
+                  we deliver complete project management, overseeing architectural planning,
+                  material sourcing, structural execution and final handover.
                 </p>
                 <p>
-                  Building from abroad is hard when you can't see the site. That is why every Champs
-                  client deals with one named point of contact from quotation to handover, and one
-                  accountable team from the first consultation to the day the keys are handed over.
+                  Managing a build from abroad requires absolute transparency. With Champs, you
+                  receive a single dedicated project manager, structured progress reporting and an
+                  accountable team committed to delivering quality on schedule and within budget.
+                </p>
+                <p>
+                  Already bought your materials? We can run the project for you on the ground,
+                  managing the labour, the work and the quality checks, so your build moves forward
+                  properly even when you can't be there.
                 </p>
               </div>
             </Reveal>
