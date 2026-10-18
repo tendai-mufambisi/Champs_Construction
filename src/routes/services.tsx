@@ -13,7 +13,7 @@ import { breadcrumbLd, canonical, pageMeta } from "@/lib/seo";
 
 const title = "Construction Services in Zimbabwe | Champs Construction";
 const description =
-  "Full turnkey builds, labour-only contracting and independent project management in Zimbabwe, plus planning, foundations, roofing, plumbing, electrical, tiling and finishes. Champs Construction, from the stand to the keys.";
+  "Full turnkey builds, labour-only contracting and independent project management in Zimbabwe, plus planning, foundations, roofing, ceilings, plumbing, electrical, tiling, finishes and boundary walls. Champs Construction, from the stand to the keys.";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/services")({
       description,
       path: "/services",
       keywords:
-        "construction services Harare, building contractor Zimbabwe, construction project management Zimbabwe, labour only builders Zimbabwe, house construction services, roofing plumbing electrical Zimbabwe, turnkey builder",
+        "construction services Harare, building contractor Zimbabwe, construction project management Zimbabwe, labour only builders Zimbabwe, house construction services, roofing plumbing electrical Zimbabwe, boundary walls Harare, turnkey builder",
     }),
     links: canonical("/services"),
     scripts: [

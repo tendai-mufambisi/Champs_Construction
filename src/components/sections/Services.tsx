@@ -28,11 +28,11 @@ export function Services() {
           />
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {services.map((service, i) => {
             const Icon = (Icons as unknown as Record<string, Icons.LucideIcon>)[service.icon];
             return (
-              <Reveal key={service.title} delay={(i % 5) * 90}>
+              <Reveal key={service.title} delay={(i % 4) * 90}>
                 <article className="group relative h-full overflow-hidden rounded-3xl border border-white/15 bg-brand-ink/60 p-7 transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:shadow-lift">
                   <span
                     aria-hidden

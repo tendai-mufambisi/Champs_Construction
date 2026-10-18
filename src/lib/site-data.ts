@@ -150,6 +150,11 @@ export const services = [
     body: "Expert roofing solutions for protection and aesthetic appeal.",
   },
   {
+    icon: "PanelTop",
+    title: "Ceilings",
+    body: "Ceiling boards, brandering and cornices, neatly fitted and finished in every room.",
+  },
+  {
     icon: "Droplets",
     title: "Plumbing",
     body: "Plumbing services for reliable and efficient systems.",
@@ -168,6 +173,11 @@ export const services = [
     icon: "PaintRoller",
     title: "Painting & Finishes",
     body: "Interior and exterior painting and finishes that make the house feel like home.",
+  },
+  {
+    icon: "Fence",
+    title: "Boundary Walls",
+    body: "Durable boundary and security walls, built on proper footings to secure your property.",
   },
   {
     icon: "Truck",
@@ -256,7 +266,7 @@ export const faqs = [
   },
   {
     q: "What services do you offer?",
-    a: "Three service models: full turnkey (fix and supply), labour-only contracting and independent project management. Within those: planning and design, site preparation and clearance, foundations and framing, roofing, plumbing, electrical installations, tiling, painting and finishes, materials supply and handover to the owner.",
+    a: "Three service models: full turnkey (fix and supply), labour-only contracting and independent project management. Within those: planning and design, site preparation and clearance, foundations and framing, roofing, ceilings, plumbing, electrical installations, tiling, painting and finishes, boundary walls, materials supply and handover to the owner.",
   },
   {
     q: "I don't have a stand yet. Can you help?",
