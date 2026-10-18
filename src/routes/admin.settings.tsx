@@ -155,7 +155,7 @@ function SettingsAdmin() {
 
         <AdminCard
           title="Stats"
-          description="Only enter confirmed numbers, e.g. 25 or 10+. An empty box shows “[X]” on the site."
+          description="Not shown on the site at the moment: the stats bar was taken off the home page until the numbers are bigger. Saved values are kept for when it comes back."
         >
           <div className="admin-form">
             {statLabels.map((s) => (

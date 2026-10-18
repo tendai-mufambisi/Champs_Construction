@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, ChevronDown, Images, MessageCircle } from "lucide-react";
 import { CompanyProfileButton } from "@/components/site/CompanyProfileButton";
-import { Counter, Reveal } from "@/components/site/Reveal";
-import { useContact, useSiteData } from "@/components/site/use-site-data";
-import { statLabels, trustBadges } from "@/lib/site-data";
+import { Reveal } from "@/components/site/Reveal";
+import { useContact } from "@/components/site/use-site-data";
+import { trustBadges } from "@/lib/site-data";
 
 // Real Champs sites and team, from the project photos in public/images/projects.
 const slides = [
@@ -37,19 +37,10 @@ const slides = [
 
 const SLIDE_MS = 5000;
 
-/** A confirmed number animates; an unconfirmed one shows "[X]" (never a made-up figure). */
-function StatValue({ value }: { value: string }) {
-  const match = value.match(/^(\d+)(.*)$/);
-  if (!value) return <span>[X]</span>;
-  if (!match) return <span>{value}</span>;
-  return <Counter value={Number(match[1])} suffix={match[2] ?? ""} />;
-}
-
 export function Hero() {
   const layerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const contact = useContact();
-  const { stats } = useSiteData();
 
   // Parallax on desktop only: the transform is written straight to the layer
   // inside requestAnimationFrame, so scrolling never re-renders the hero.
@@ -174,24 +165,6 @@ export function Hero() {
               </li>
             ))}
           </ul>
-        </Reveal>
-
-        <Reveal delay={500}>
-          <div className="glass mt-14 grid grid-cols-3 gap-y-8 rounded-3xl px-4 py-8 sm:px-6 lg:max-w-3xl">
-            {statLabels.map((s) => (
-              <div
-                key={s.key}
-                className="text-center sm:border-r sm:border-white/10 sm:last:border-none"
-              >
-                <p className="font-display text-2xl font-semibold text-white sm:text-5xl">
-                  <StatValue value={stats[s.key]} />
-                </p>
-                <p className="mt-2 text-[10px] font-semibold tracking-[0.14em] text-white/60 uppercase sm:text-xs">
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
         </Reveal>
       </div>
 
