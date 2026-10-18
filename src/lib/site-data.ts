@@ -48,11 +48,20 @@ export const navLinks = [
 
 export type NavLink = (typeof navLinks)[number];
 
-// Hero trust strip.
+// Hero trust strip, worded by the owner.
 export const trustBadges = [
-  "Full Project Management",
-  "Turnkey Handover",
-  "Fixed, Written Quotations",
+  {
+    title: "Supply & Fix Options",
+    body: "Complete materials sourcing paired with skilled craftsmanship.",
+  },
+  {
+    title: "Labour-Only & Project Management",
+    body: "Expert artisans backed by professional site oversight.",
+  },
+  {
+    title: "Contract-Guaranteed Fixed Pricing",
+    body: "Legally binding written agreements with zero cost surprises.",
+  },
 ];
 
 // Stats bar labels. The numbers are set in the dashboard; until then they show "[X]".

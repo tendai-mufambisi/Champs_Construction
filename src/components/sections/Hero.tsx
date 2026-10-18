@@ -159,16 +159,18 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={400}>
-          <ul className="mt-10 flex flex-wrap gap-x-7 gap-y-3">
+          <ul className="mt-10 grid max-w-4xl gap-x-8 gap-y-4 sm:grid-cols-3">
             {trustBadges.map((badge) => (
-              <li
-                key={badge}
-                className="flex items-center gap-2 text-sm font-semibold text-white/90"
-              >
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-accent-gold">
+              <li key={badge.title} className="flex gap-2.5">
+                <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent-gold">
                   <Check className="h-3 w-3 text-brand-ink" />
                 </span>
-                {badge}
+                <span>
+                  <span className="block text-sm font-semibold text-white">{badge.title}</span>
+                  <span className="mt-1 block text-xs leading-relaxed text-white/70">
+                    {badge.body}
+                  </span>
+                </span>
               </li>
             ))}
           </ul>
