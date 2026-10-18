@@ -1,6 +1,6 @@
 # Owner dashboard
 
-Sign in at https://champs.digitsdigital.co.zw/admin/login (or tap the **©** in the footer).
+Sign in at https://champsconstruction.co.zw/admin/login (or tap the **©** in the footer).
 Password only. After 8 wrong passwords from one connection, sign-in is blocked for 15 minutes.
 
 | Section | Controls |

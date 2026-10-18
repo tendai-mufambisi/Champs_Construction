@@ -163,9 +163,33 @@ async function serveSitemap(request: Request, env: unknown): Promise<Response | 
 const nlJoin = (entries: string[]) =>
   `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.join("")}</urlset>`;
 
+const CANONICAL_HOST = "champsconstruction.co.zw";
+
+/** Hosts that also reach this Worker but should send visitors to the real address. */
+const REDIRECT_HOSTS = new Set(["www.champsconstruction.co.zw", "champs.digitsdigital.co.zw"]);
+
+/**
+ * One secure address for the whole site, so search engines rank one URL and visitors
+ * always see champsconstruction.co.zw. Static files are served before the Worker
+ * runs, so this covers pages, which is what links and search results point to.
+ */
+function redirectToCanonical(request: Request): Response | undefined {
+  const url = new URL(request.url);
+  // Plain http on the real domain is upgraded too; localhost is left alone for dev.
+  const insecure = url.protocol === "http:" && url.hostname === CANONICAL_HOST;
+  if (!REDIRECT_HOSTS.has(url.hostname) && !insecure) return undefined;
+  url.hostname = CANONICAL_HOST;
+  url.protocol = "https:";
+  url.port = "";
+  return Response.redirect(url.toString(), 301);
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const redirect = redirectToCanonical(request);
+      if (redirect) return redirect;
+
       const media = await serveMedia(request, env);
       if (media) return media;
 

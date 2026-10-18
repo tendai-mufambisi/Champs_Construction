@@ -5,7 +5,7 @@
 // Rules: never invent testimonials, statistics, project names, awards, registrations or
 // credentials. Anything still to be supplied by the client is marked [LIKE THIS].
 
-export const SITE_URL = "https://champs.digitsdigital.co.zw";
+export const SITE_URL = "https://champsconstruction.co.zw";
 
 export const company = {
   name: "Champs Construction",

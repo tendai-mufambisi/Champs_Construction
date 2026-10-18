@@ -30,4 +30,4 @@ Disallow: /admin
 Disallow: /api/
 Disallow: /_serverFn/
 
-Sitemap: https://champs.digitsdigital.co.zw/sitemap.xml
+Sitemap: https://champsconstruction.co.zw/sitemap.xml

@@ -11,7 +11,13 @@
   // local workerd runtime supports.
   "compatibility_date": "2026-10-01",
 
-  "routes": [{ "pattern": "champs.digitsdigital.co.zw", "custom_domain": true }],
+  // The apex is the real address. www and the original subdomain stay attached so
+  // old links keep working; src/server.ts redirects both to the apex.
+  "routes": [
+    { "pattern": "champsconstruction.co.zw", "custom_domain": true },
+    { "pattern": "www.champsconstruction.co.zw", "custom_domain": true },
+    { "pattern": "champs.digitsdigital.co.zw", "custom_domain": true }
+  ],
 
   "d1_databases": [
     {
