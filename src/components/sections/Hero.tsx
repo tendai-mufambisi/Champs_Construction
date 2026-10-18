@@ -1,42 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, ChevronDown, Images, MessageCircle } from "lucide-react";
-import workerTools from "@/assets/stock-worker-tools.jpg";
-import houseScaffolding from "@/assets/stock-house-scaffolding.jpg";
-import workerMeasuring from "@/assets/stock-worker-measuring.jpg";
-import roofScaffolding from "@/assets/stock-roof-scaffolding.jpg";
-import engineer from "@/assets/stock-house-plastered-engineer.jpg";
 import { CompanyProfileButton } from "@/components/site/CompanyProfileButton";
 import { Counter, Reveal } from "@/components/site/Reveal";
 import { useContact, useSiteData } from "@/components/site/use-site-data";
 import { statLabels, trustBadges } from "@/lib/site-data";
 
-// Illustrative stock photos (CC0 / Pexels licence, see docs/image-credits.txt).
-// Real Champs project photos live in the Projects section, managed from /admin.
+// Real Champs sites and team, from the project photos in public/images/projects.
 const slides = [
   {
-    src: workerTools,
-    alt: "A builder in a yellow hard hat and safety vest holding tools",
-    position: "50% 25%",
+    src: "/images/projects/mvurwi/finished-front.jpg",
+    alt: "A finished four-bedroom Champs home in Mvurwi with a face-brick front and chimney",
+    position: "50% 55%",
   },
   {
-    src: houseScaffolding,
-    alt: "A house under construction surrounded by scaffolding",
+    src: "/images/projects/executive/roofing.jpg",
+    alt: "Champs roofers fixing red roof sheets on a large brick house",
     position: "50% 50%",
   },
   {
-    src: workerMeasuring,
-    alt: "A builder in a yellow hard hat measuring a wall",
-    position: "50% 30%",
+    src: "/images/projects/executive/team.jpg",
+    alt: "The Champs Construction team in hard hats and orange overalls on site",
+    position: "50% 35%",
   },
   {
-    src: roofScaffolding,
-    alt: "A new roof going on a house under construction",
-    position: "50% 50%",
+    src: "/images/projects/mvurwi/roofing.jpg",
+    alt: "Builders fixing the roof on a Champs house under construction",
+    position: "50% 45%",
   },
   {
-    src: engineer,
-    alt: "A site supervisor with house plans in front of a newly built house",
+    src: "/images/projects/family-home/side.jpg",
+    alt: "A completed Champs family home with cream walls and dark aluminium windows",
     position: "50% 50%",
   },
 ];

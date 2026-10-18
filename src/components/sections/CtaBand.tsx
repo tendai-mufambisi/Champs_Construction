@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import roof from "@/assets/stock-roof-scaffolding.jpg";
 import { ParallaxBg } from "@/components/site/ParallaxBg";
 import { Reveal } from "@/components/site/Reveal";
 import { useContact } from "@/components/site/use-site-data";
@@ -11,7 +10,7 @@ export function CtaBand() {
 
   return (
     <section aria-label="Start your build" className="relative overflow-hidden bg-brand-ink">
-      <ParallaxBg src={roof} speed={0.4} position="50% 40%" />
+      <ParallaxBg src="/images/projects/executive/roofed.jpg" speed={0.4} position="50% 45%" />
       <div
         aria-hidden
         className="absolute inset-0 bg-brand-ink/75 lg:bg-transparent lg:bg-gradient-to-r lg:from-brand-ink/95 lg:via-brand-ink/75 lg:to-brand-ink/15"

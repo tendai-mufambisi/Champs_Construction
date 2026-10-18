@@ -1,7 +1,6 @@
 import * as Icons from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import plans from "@/assets/stock-plans-clipboard.jpg";
 import { ParallaxBg } from "@/components/site/ParallaxBg";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -12,7 +11,7 @@ export function Services() {
     <section id="services" className="relative overflow-hidden bg-brand-ink">
       {/* The photo sits behind the whole section, cards included. A light, even
           overlay keeps it clear; the cards carry their own tint for legibility. */}
-      <ParallaxBg src={plans} position="50% 50%" />
+      <ParallaxBg src="/images/projects/bulawayo/inspection.jpg" position="50% 50%" />
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-b from-brand-ink/85 via-brand-ink/60 to-brand-ink/80"

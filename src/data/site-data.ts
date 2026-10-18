@@ -120,7 +120,7 @@ export type SiteData = {
   live: boolean;
 };
 
-/* ---------- fallback (mirrors migration 0002) ---------- */
+/* ---------- fallback (mirrors migrations 0002–0004) ---------- */
 
 export const FOUNDER_QUOTE_PLACEHOLDER = "[FOUNDER QUOTE — TO CONFIRM]";
 
@@ -133,7 +133,18 @@ export const FALLBACK_CONTACT: ContactSettings = {
   community: company.community,
 };
 
+// Mirrors work_photos after migration 0004, in display order.
 export const FALLBACK_PROJECTS: WorkPhotoRecord[] = [
+  {
+    id: 6,
+    src: "/images/work/setting-out.jpg",
+    width: 1000,
+    height: 750,
+    alt: "The Champs team setting out foundation trenches on a cleared stand",
+    caption: "Setting out the foundations",
+    stage: "Before",
+    hidden: false,
+  },
   {
     id: 1,
     src: "/images/projects/champs-team-on-site.jpg",
@@ -142,6 +153,36 @@ export const FALLBACK_PROJECTS: WorkPhotoRecord[] = [
     alt: "The Champs Construction team in hard hats and safety overalls on a cleared stand",
     caption: "Our team on site, ready to start",
     stage: "Before",
+    hidden: false,
+  },
+  {
+    id: 3,
+    src: "/images/work/foundation-steel.jpg",
+    width: 1000,
+    height: 750,
+    alt: "Steel reinforcement laid in the foundation trenches",
+    caption: "Steel reinforcement in the foundations",
+    stage: "During",
+    hidden: false,
+  },
+  {
+    id: 7,
+    src: "/images/work/brickwork.jpg",
+    width: 1000,
+    height: 750,
+    alt: "Builders on a brick wall rising from the foundations",
+    caption: "Brickwork rising",
+    stage: "During",
+    hidden: false,
+  },
+  {
+    id: 8,
+    src: "/images/work/plastering.jpg",
+    width: 1000,
+    height: 750,
+    alt: "Builders on scaffolding plastering a house with a tiled roof",
+    caption: "Plastering under a tiled roof",
+    stage: "During",
     hidden: false,
   },
   {
@@ -155,45 +196,94 @@ export const FALLBACK_PROJECTS: WorkPhotoRecord[] = [
     hidden: false,
   },
   {
-    id: 3,
-    src: "/images/placeholders/double-storey-under-scaffolding.svg",
-    width: 1200,
-    height: 900,
-    alt: "Placeholder for a photo of a double-storey house under scaffolding",
-    caption: "[REPLACE WITH CHAMPS PROJECT PHOTO] Double-storey under scaffolding",
-    stage: "During",
+    id: 4,
+    src: "/images/projects/mvurwi/finished-front.jpg",
+    width: 1080,
+    height: 810,
+    alt: "A finished four-bedroom house with a face-brick front and chimney",
+    caption: "Four-bedroom turnkey home, Mvurwi",
+    stage: "After",
     hidden: false,
   },
   {
-    id: 4,
-    src: "/images/placeholders/completed-single-storey-brick-home.svg",
-    width: 1200,
-    height: 900,
-    alt: "Placeholder for a photo of a completed single-storey brick home",
-    caption: "[REPLACE WITH CHAMPS PROJECT PHOTO] Completed single-storey brick home",
+    id: 9,
+    src: "/images/projects/mvurwi/kitchen.jpg",
+    width: 1000,
+    height: 750,
+    alt: "A fitted kitchen with white cupboards and a black worktop",
+    caption: "Fitted kitchen, ready for handover",
     stage: "After",
     hidden: false,
   },
   {
     id: 5,
-    src: "/images/placeholders/cottage-rondavel-tiled-roof.svg",
-    width: 1200,
-    height: 900,
-    alt: "Placeholder for a photo of a cottage or rondavel with a tiled roof",
-    caption: "[REPLACE WITH CHAMPS PROJECT PHOTO] Cottage / rondavel with tiled roof",
+    src: "/images/projects/family-home/front.jpg",
+    width: 1000,
+    height: 563,
+    alt: "A completed cream house with a black plinth and dark windows",
+    caption: "Completed family home",
     stage: "After",
+    hidden: false,
+  },
+];
+
+// Mirrors the team after migration 0004.
+export const FALLBACK_TEAM: TeamMember[] = [
+  {
+    id: 1,
+    name: "Mr R. Gwenyambira",
+    role: "Operations Manager",
+    bio: "",
+    photo: "/images/team/r-gwenyambira.jpg",
+    photoAlt: "Mr R. Gwenyambira in a Champs hard hat",
+    hidden: false,
+  },
+  {
+    id: 2,
+    name: "Mr D. Chaleka",
+    role: "Projects Manager",
+    bio: "",
+    photo: "/images/team/d-chaleka.jpg",
+    photoAlt: "Mr D. Chaleka in a Champs hard hat",
+    hidden: false,
+  },
+  {
+    id: 3,
+    name: "Mr R. Masiya",
+    role: "Quantity Surveyor",
+    bio: "",
+    photo: "/images/team/r-masiya.jpg",
+    photoAlt: "Mr R. Masiya in a Champs hard hat and safety jacket",
+    hidden: false,
+  },
+  {
+    id: 4,
+    name: "Mr M. Marume",
+    role: "Admin",
+    bio: "",
+    photo: "/images/team/m-marume.jpg",
+    photoAlt: "Mr M. Marume in a Champs hard hat and overalls",
     hidden: false,
   },
 ];
 
 export const FALLBACK_SITE_DATA: SiteData = {
   contact: FALLBACK_CONTACT,
-  founder: { name: "Mr. Regai", quote: FOUNDER_QUOTE_PLACEHOLDER, photo: null },
+  founder: {
+    name: "Mr. R Gwenyambira",
+    quote: FOUNDER_QUOTE_PLACEHOLDER,
+    photo: {
+      src: "/images/team/r-gwenyambira.jpg",
+      width: 503,
+      height: 629,
+      alt: "Mr R. Gwenyambira, founder of Champs Construction",
+    },
+  },
   stats: { homes: "", diaspora: "", years: "" },
   burbs: burbsDefaults,
   workPhotos: FALLBACK_PROJECTS,
   projects: [],
-  team: [],
+  team: FALLBACK_TEAM,
   toggles: { burbsEnabled: true, teamEnabled: true, companyProfilePdf: "" },
   testimonials: [],
   live: false,

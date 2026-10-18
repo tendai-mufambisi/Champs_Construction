@@ -18,8 +18,9 @@ Cloudflare Worker with D1 (data) and R2 (photo uploads), plus an owner dashboard
 | Brand colours | `src/styles.css` → `:root` |
 | Logo / favicon / OG image | `src/assets/champs-logo.svg`, `public/` |
 
-Stock photos (hero and backgrounds only) are CC0 / Pexels-licensed, see
-`docs/image-credits.txt`. Real project photos go in through the dashboard.
+Every photo on the site is a real Champs photo. The section backgrounds and hero use
+the project photos in `public/images/projects/`; project pages, the team and the
+Before/During/After strip are managed from the dashboard.
 
 ## Commands
 

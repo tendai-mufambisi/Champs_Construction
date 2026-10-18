@@ -27,21 +27,21 @@ export function About() {
           <div className="relative pb-10">
             <Reveal>
               <img
-                src="/images/projects/champs-team-on-site.jpg"
+                src="/images/projects/bulawayo/team.jpg"
                 alt="The Champs Construction team in hard hats and safety overalls on site"
                 loading="lazy"
-                width={637}
-                height={318}
-                className="aspect-[4/3] w-full rounded-[2rem] object-cover object-left shadow-lift"
+                width={1000}
+                height={750}
+                className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-lift"
               />
             </Reveal>
             <Reveal delay={200}>
               <img
-                src="/images/projects/champs-house-during-construction.jpg"
-                alt="A single-storey house built by Champs Construction, under construction"
+                src="/images/projects/mvurwi/finished-sunset.jpg"
+                alt="A four-bedroom home built by Champs Construction in Mvurwi"
                 loading="lazy"
-                width={637}
-                height={278}
+                width={1080}
+                height={810}
                 className="absolute -right-2 bottom-0 hidden w-60 rounded-2xl border-4 border-white object-cover shadow-lift sm:block lg:w-72"
               />
             </Reveal>
