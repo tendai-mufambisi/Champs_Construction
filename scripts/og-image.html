@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  Source for public/og-image.jpg, the 1200x630 link preview (WhatsApp, Facebook,
+  LinkedIn, X). Mirrors the home page hero. Rebuild with:
+
+    node scripts/build-og-image.mjs
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&family=Sora:wght@700;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: oklch(0.235 0 0);
+        --gold: oklch(0.792 0.17 71);
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; background: var(--ink); }
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        font-family: Manrope, sans-serif;
+        color: #fff;
+        background: url("../public/images/projects/mvurwi/finished-front.jpg") 62% 55% / cover;
+      }
+      .shade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          color-mix(in oklab, var(--ink) 94%, transparent) 0%,
+          color-mix(in oklab, var(--ink) 80%, transparent) 48%,
+          color-mix(in oklab, var(--ink) 35%, transparent) 100%
+        );
+      }
+      .band {
+        position: absolute;
+        top: -120px;
+        left: 690px;
+        width: 92px;
+        height: 1100px;
+        background: var(--gold);
+        transform: rotate(-52deg);
+        transform-origin: top left;
+        opacity: 0.95;
+      }
+      .content { position: absolute; inset: 0; padding: 52px 64px; }
+      .logo { height: 74px; }
+      .eyebrow {
+        margin-top: 46px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--gold);
+        font-weight: 700;
+        font-size: 19px;
+        letter-spacing: 0.24em;
+      }
+      .eyebrow::before { content: ""; width: 40px; height: 4px; border-radius: 4px; background: var(--gold); }
+      h1 {
+        margin-top: 14px;
+        font-family: Sora, sans-serif;
+        font-weight: 800;
+        font-size: 86px;
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+      }
+      h1 span { color: var(--gold); }
+      .sub { margin-top: 22px; max-width: 620px; font-size: 24px; line-height: 1.4; color: rgb(255 255 255 / 0.86); font-weight: 500; }
+      .footer {
+        position: absolute;
+        left: 64px;
+        bottom: 46px;
+        display: flex;
+        gap: 14px;
+        font-weight: 700;
+        font-size: 21px;
+      }
+      .pill { padding: 12px 22px; border-radius: 999px; }
+      .pill.gold { background: var(--gold); color: var(--ink); }
+      .pill.ghost { border: 2px solid rgb(255 255 255 / 0.35); background: rgb(0 0 0 / 0.25); }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="shade"></div>
+      <div class="band"></div>
+      <div class="content">
+        <img class="logo" src="../public/champs-logo-dark.png" alt="" />
+        <p class="eyebrow">TURNKEY HOME CONSTRUCTION</p>
+        <h1>BUILDING BACK HOME,<br /><span>DONE RIGHT.</span></h1>
+        <p class="sub">Quality homes for Zimbabweans at home and abroad, from the stand to the keys in your hands.</p>
+      </div>
+      <div class="footer">
+        <span class="pill gold">champsconstruction.co.zw</span>
+        <span class="pill ghost">+263 71 379 6159</span>
+      </div>
+    </div>
+  </body>
+</html>

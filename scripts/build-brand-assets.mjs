@@ -18,7 +18,9 @@
  *   favicon.png            192, same tile
  *   apple-touch-icon.png   180, same tile
  *   icon-512.png           512, same tile
- *   og-image.png           1200x630 share card
+ *
+ * The link preview (public/og-image.jpg) is built separately, from a photo:
+ * see scripts/build-og-image.mjs.
  *
  *   node scripts/build-brand-assets.mjs
  */
@@ -92,19 +94,7 @@ function buildIco(entries) {
   return Buffer.concat([header, dir, ...entries.map((e) => e.data)]);
 }
 
-/** 1200x630 share card: the full lockup, tagline and all, on charcoal. */
-async function shareCard() {
-  const logo = await sharp(DARK).trim({ threshold: 1 }).resize({ width: 820, fit: "inside" }).toBuffer();
-  const card = await sharp({ create: { width: 1200, height: 630, channels: 4, background: INK } })
-    .composite([{ input: logo, gravity: "center" }])
-    .png()
-    .toBuffer();
-  writeFileSync(pub("og-image.png"), card);
-  console.log(`wrote public/og-image.png (1200x630, ${card.length} bytes)`);
-}
-
 await wordmark();
-await shareCard();
 
 for (const [name, size] of [
   ["favicon.png", 192],

@@ -36,7 +36,8 @@ export function pageMeta({
   type = "website",
 }: PageSeo) {
   const url = absoluteUrl(path);
-  const shareImage = absoluteUrl(image?.trim() || company.ogImage);
+  const ownImage = image?.trim();
+  const shareImage = absoluteUrl(ownImage || company.ogImage);
 
   return [
     { title },
@@ -49,7 +50,18 @@ export function pageMeta({
     { property: "og:type", content: type },
     { property: "og:url", content: url },
     { property: "og:image", content: shareImage },
+    { property: "og:image:secure_url", content: shareImage },
     { property: "og:image:alt", content: imageAlt || title },
+    // The share card's size is known, so WhatsApp and Facebook can draw the large
+    // preview on the first share instead of waiting to download it. A page's own
+    // photo varies in size, so it is left for the scraper to measure.
+    ...(ownImage
+      ? []
+      : [
+          { property: "og:image:type", content: "image/jpeg" },
+          { property: "og:image:width", content: "1200" },
+          { property: "og:image:height", content: "630" },
+        ]),
 
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },

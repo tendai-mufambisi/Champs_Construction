@@ -17,7 +17,7 @@ export const company = {
   logo: "/logo-wordmark.png",
   logoDark: "/champs-logo-dark.png",
   logoLight: "/champs-logo-light.png",
-  ogImage: "/og-image.png",
+  ogImage: "/og-image.jpg",
   shortName: "Champs",
   tagline: "Building Partners You Can Trust",
   // Primary line (also WhatsApp), as on the client's flyer.
