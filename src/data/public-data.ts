@@ -3,8 +3,8 @@ import { getRequest, getRequestIP } from "@tanstack/react-start/server";
 
 import { getDb } from "./bindings.server";
 import { enquirySchema, type EnquiryInput } from "./enquiry";
-import { FALLBACK_SITE_DATA, type SiteData } from "./site-data";
-import { loadSiteData } from "./site-data.server";
+import { FALLBACK_SITE_DATA, type ProjectImage, type ProjectRecord, type SiteData } from "./site-data";
+import { loadSiteData, PROJECT_COLUMNS, toProject, type ProjectRow } from "./site-data.server";
 
 /**
  * Everything owner-editable that the public pages show, read once by the root loader.
@@ -21,6 +21,37 @@ export const getSiteData = createServerFn({ method: "GET" }).handler(
     }
   },
 );
+
+export type ProjectDetail = { project: ProjectRecord; images: ProjectImage[] };
+
+/**
+ * One project and its gallery, for /projects/<slug>.
+ *
+ * Unpublished projects are not reachable here: without the published filter a
+ * half-written draft would be live to anyone who guessed the URL.
+ */
+export const getProjectBySlug = createServerFn({ method: "GET" })
+  .inputValidator((slug: string) => slug)
+  .handler(async ({ data: slug }): Promise<ProjectDetail | null> => {
+    try {
+      const db = getDb();
+      const row = await db
+        .prepare(`SELECT ${PROJECT_COLUMNS} FROM projects WHERE slug = ? AND published = 1`)
+        .bind(slug)
+        .first<ProjectRow>();
+      if (!row) return null;
+
+      const { results } = await db
+        .prepare(`SELECT id, url, alt FROM project_images WHERE project_id = ? ORDER BY position, id`)
+        .bind(row.id)
+        .all<ProjectImage>();
+
+      return { project: toProject(row), images: results };
+    } catch (error) {
+      console.error("Could not load the project:", error);
+      return null;
+    }
+  });
 
 // Enough for a family filling the form in for several people; stops scripted floods.
 const MAX_ENQUIRIES_PER_HOUR = 6;

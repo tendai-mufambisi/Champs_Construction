@@ -102,11 +102,75 @@ function resolveMediaBucket(request: Request, env: unknown): R2Bucket | undefine
   );
 }
 
+/** Pages that always exist, with a rough sense of how often each one changes. */
+const STATIC_ROUTES: [path: string, changefreq: string, priority: string][] = [
+  ["/", "weekly", "1.0"],
+  ["/projects", "weekly", "0.9"],
+  ["/services", "monthly", "0.8"],
+  ["/about", "monthly", "0.7"],
+  ["/contact", "yearly", "0.6"],
+];
+
+type SitemapEnv = { DB?: D1Database };
+
+/**
+ * Build /sitemap.xml from the database.
+ *
+ * A static file would need editing by hand every time the owner publishes a
+ * project, which would never happen. This way a new project page is in the
+ * sitemap the moment it goes live.
+ */
+async function serveSitemap(request: Request, env: unknown): Promise<Response | undefined> {
+  const url = new URL(request.url);
+  if (url.pathname !== "/sitemap.xml") return undefined;
+
+  // Always https: the site is served over TLS, and a local dev request would
+  // otherwise publish http:// URLs into a real sitemap.
+  const origin = `https://${url.host}`;
+  const entries = STATIC_ROUTES.map(
+    ([path, changefreq, priority]) =>
+      `<url><loc>${origin}${path}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`,
+  );
+
+  const db =
+    (request as Request & { runtime?: { cloudflare?: { env?: SitemapEnv } } }).runtime?.cloudflare
+      ?.env?.DB ??
+    (globalThis as { __env__?: SitemapEnv }).__env__?.DB ??
+    (env as SitemapEnv | undefined)?.DB;
+
+  if (db) {
+    try {
+      const { results } = await db
+        .prepare(`SELECT slug FROM projects WHERE published = 1 ORDER BY position, id`)
+        .all<{ slug: string }>();
+      for (const row of results) {
+        entries.push(
+          `<url><loc>${origin}/projects/${encodeURIComponent(row.slug)}</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
+        );
+      }
+    } catch (error) {
+      // A database blip should still leave a valid sitemap of the fixed pages.
+      console.error("Could not add projects to the sitemap:", error);
+    }
+  }
+
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8"?>${nlJoin(entries)}`,
+    { headers: { "content-type": "application/xml; charset=utf-8", "cache-control": "public, max-age=3600" } },
+  );
+}
+
+const nlJoin = (entries: string[]) =>
+  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.join("")}</urlset>`;
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const media = await serveMedia(request, env);
       if (media) return media;
+
+      const sitemap = await serveSitemap(request, env);
+      if (sitemap) return sitemap;
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

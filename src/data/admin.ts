@@ -8,8 +8,10 @@ import {
   type BurbsSettings,
   type ContactSettings,
   type FounderSettings,
-  type ProjectRecord,
+  type WorkPhotoRecord,
+  type SiteToggles,
   type StatsSettings,
+  type TeamMember,
   type TestimonialRecord,
 } from "./site-data";
 import {
@@ -17,14 +19,18 @@ import {
   contactFrom,
   deleteMediaObjects,
   founderFrom,
-  PROJECT_COLUMNS,
+  WORK_PHOTO_COLUMNS,
   readSettings,
   statsFrom,
+  togglesFrom,
+  TEAM_COLUMNS,
   TESTIMONIAL_COLUMNS,
-  toProject,
+  toWorkPhoto,
+  toTeamMember,
   toTestimonial,
   writeSettings,
-  type ProjectRow,
+  type WorkPhotoRow,
+  type TeamRow,
   type TestimonialRow,
 } from "./site-data.server";
 
@@ -81,7 +87,9 @@ const positiveId = (value: unknown) => {
 };
 
 /** Swap with the neighbour. Positions are renumbered so duplicates never block a move. */
-async function move(table: "projects" | "testimonials", id: number, direction: "up" | "down") {
+type OrderedTable = "work_photos" | "testimonials" | "projects" | "team";
+
+async function move(table: OrderedTable, id: number, direction: "up" | "down") {
   const db = getDb();
   const { results } = await db
     .prepare(`SELECT id FROM ${table} ORDER BY position, id`)
@@ -101,7 +109,7 @@ async function move(table: "projects" | "testimonials", id: number, direction: "
 }
 
 /** New items go to the top of their list. */
-async function topPosition(table: "projects" | "testimonials"): Promise<number> {
+async function topPosition(table: OrderedTable): Promise<number> {
   const top = await getDb()
     .prepare(`SELECT COALESCE(MIN(position), 1) - 1 AS pos FROM ${table}`)
     .first<{ pos: number }>();
@@ -110,9 +118,9 @@ async function topPosition(table: "projects" | "testimonials"): Promise<number> 
 
 /* ---------- projects ---------- */
 
-export type ProjectFields = { caption: string; stage: string; alt: string };
+export type WorkPhotoFields = { caption: string; stage: string; alt: string };
 
-function cleanProjectFields(input: ProjectFields) {
+function cleanWorkPhotoFields(input: WorkPhotoFields) {
   const caption = input.caption.trim().slice(0, 140);
   if (!caption) throw new Error("Please add a caption.");
   if (!(stages as readonly string[]).includes(input.stage)) {
@@ -127,32 +135,32 @@ function cleanProjectFields(input: ProjectFields) {
 }
 
 /** Admin lists are unfiltered and never fall back — the owner must see the truth. */
-export const adminListProjects = createServerFn({ method: "GET" }).handler(
-  async (): Promise<ProjectRecord[]> => {
+export const adminListWorkPhotos = createServerFn({ method: "GET" }).handler(
+  async (): Promise<WorkPhotoRecord[]> => {
     await requireAdmin();
     const { results } = await getDb()
-      .prepare(`SELECT ${PROJECT_COLUMNS} FROM projects ORDER BY position, id`)
-      .all<ProjectRow>();
-    return results.map(toProject);
+      .prepare(`SELECT ${WORK_PHOTO_COLUMNS} FROM work_photos ORDER BY position, id`)
+      .all<WorkPhotoRow>();
+    return results.map(toWorkPhoto);
   },
 );
 
-export const adminGetProject = createServerFn({ method: "GET" })
+export const adminGetWorkPhoto = createServerFn({ method: "GET" })
   .inputValidator((id: number) => id)
-  .handler(async ({ data: id }): Promise<ProjectRecord | null> => {
+  .handler(async ({ data: id }): Promise<WorkPhotoRecord | null> => {
     await requireAdmin();
     const row = await getDb()
-      .prepare(`SELECT ${PROJECT_COLUMNS} FROM projects WHERE id = ?`)
+      .prepare(`SELECT ${WORK_PHOTO_COLUMNS} FROM work_photos WHERE id = ?`)
       .bind(id)
-      .first<ProjectRow>();
-    return row ? toProject(row) : null;
+      .first<WorkPhotoRow>();
+    return row ? toWorkPhoto(row) : null;
   });
 
-export const createProject = createServerFn({ method: "POST" })
+export const createWorkPhoto = createServerFn({ method: "POST" })
   .inputValidator((formData: FormData) => formData)
   .handler(async ({ data }): Promise<{ id: number }> => {
     await requireAdmin();
-    const fields = cleanProjectFields({
+    const fields = cleanWorkPhotoFields({
       caption: String(data.get("caption") ?? ""),
       stage: String(data.get("stage") ?? ""),
       alt: String(data.get("alt") ?? ""),
@@ -161,7 +169,7 @@ export const createProject = createServerFn({ method: "POST" })
     const src = await putImage("projects", image);
     const result = await getDb()
       .prepare(
-        `INSERT INTO projects (src, width, height, alt, caption, stage, hidden, position)
+        `INSERT INTO work_photos (src, width, height, alt, caption, stage, hidden, position)
          VALUES (?, ?, ?, ?, ?, ?, 0, ?)`,
       )
       .bind(
@@ -171,24 +179,24 @@ export const createProject = createServerFn({ method: "POST" })
         fields.alt,
         fields.caption,
         fields.stage,
-        await topPosition("projects"),
+        await topPosition("work_photos"),
       )
       .run();
     return { id: Number(result.meta.last_row_id) };
   });
 
-export const saveProject = createServerFn({ method: "POST" })
-  .inputValidator((input: ProjectFields & { id: number }) => input)
+export const saveWorkPhoto = createServerFn({ method: "POST" })
+  .inputValidator((input: WorkPhotoFields & { id: number }) => input)
   .handler(async ({ data }): Promise<void> => {
     await requireAdmin();
-    const fields = cleanProjectFields(data);
+    const fields = cleanWorkPhotoFields(data);
     await getDb()
-      .prepare(`UPDATE projects SET caption = ?, stage = ?, alt = ? WHERE id = ?`)
+      .prepare(`UPDATE work_photos SET caption = ?, stage = ?, alt = ? WHERE id = ?`)
       .bind(fields.caption, fields.stage, fields.alt, positiveId(data.id))
       .run();
   });
 
-export const replaceProjectPhoto = createServerFn({ method: "POST" })
+export const replaceWorkPhotoImage = createServerFn({ method: "POST" })
   .inputValidator((formData: FormData) => formData)
   .handler(async ({ data }): Promise<void> => {
     await requireAdmin();
@@ -197,51 +205,51 @@ export const replaceProjectPhoto = createServerFn({ method: "POST" })
 
     const db = getDb();
     const project = await db
-      .prepare(`SELECT src FROM projects WHERE id = ?`)
+      .prepare(`SELECT src FROM work_photos WHERE id = ?`)
       .bind(id)
       .first<{ src: string }>();
     if (!project) throw new Error("That project no longer exists.");
 
     const src = await putImage("projects", image);
     await db
-      .prepare(`UPDATE projects SET src = ?, width = ?, height = ? WHERE id = ?`)
+      .prepare(`UPDATE work_photos SET src = ?, width = ?, height = ? WHERE id = ?`)
       .bind(src, image.width, image.height, id)
       .run();
     await deleteMediaObjects([project.src]);
   });
 
-export const setProjectHidden = createServerFn({ method: "POST" })
+export const setWorkPhotoHidden = createServerFn({ method: "POST" })
   .inputValidator((input: { id: number; hidden: boolean }) => input)
   .handler(async ({ data }): Promise<void> => {
     await requireAdmin();
     await getDb()
-      .prepare(`UPDATE projects SET hidden = ? WHERE id = ?`)
+      .prepare(`UPDATE work_photos SET hidden = ? WHERE id = ?`)
       .bind(data.hidden ? 1 : 0, positiveId(data.id))
       .run();
   });
 
-export const deleteProject = createServerFn({ method: "POST" })
+export const deleteWorkPhoto = createServerFn({ method: "POST" })
   .inputValidator((id: number) => id)
   .handler(async ({ data }): Promise<void> => {
     await requireAdmin();
     const id = positiveId(data);
     const db = getDb();
     const project = await db
-      .prepare(`SELECT src FROM projects WHERE id = ?`)
+      .prepare(`SELECT src FROM work_photos WHERE id = ?`)
       .bind(id)
       .first<{ src: string }>();
     if (!project) return;
 
-    await db.prepare(`DELETE FROM projects WHERE id = ?`).bind(id).run();
+    await db.prepare(`DELETE FROM work_photos WHERE id = ?`).bind(id).run();
     // Remove the R2 object too, or the bucket keeps paying for an orphan.
     await deleteMediaObjects([project.src]);
   });
 
-export const moveProject = createServerFn({ method: "POST" })
+export const moveWorkPhoto = createServerFn({ method: "POST" })
   .inputValidator((input: { id: number; direction: "up" | "down" }) => input)
   .handler(async ({ data }): Promise<void> => {
     await requireAdmin();
-    await move("projects", positiveId(data.id), data.direction);
+    await move("work_photos", positiveId(data.id), data.direction);
   });
 
 /* ---------- testimonials ---------- */
@@ -385,6 +393,7 @@ export type AdminSettings = {
   founder: FounderSettings;
   stats: StatsSettings;
   burbs: BurbsSettings;
+  toggles: SiteToggles;
 };
 
 export const adminGetSettings = createServerFn({ method: "GET" }).handler(
@@ -396,6 +405,7 @@ export const adminGetSettings = createServerFn({ method: "GET" }).handler(
       founder: founderFrom(settings),
       stats: statsFrom(settings),
       burbs: burbsFrom(settings),
+      toggles: togglesFrom(settings),
     };
   },
 );
@@ -498,3 +508,181 @@ export const removeFounderPhoto = createServerFn({ method: "POST" }).handler(
     if (previous) await deleteMediaObjects([previous.src]);
   },
 );
+
+/* ---------- toggles & company profile ---------- */
+
+const MAX_PDF_BYTES = 25 * 1024 * 1024; // 25 MB
+
+export type SiteTogglesInput = { burbsEnabled: boolean; teamEnabled: boolean };
+
+export const saveToggles = createServerFn({ method: "POST" })
+  .inputValidator((input: SiteTogglesInput) => input)
+  .handler(async ({ data }): Promise<void> => {
+    await requireAdmin();
+    await writeSettings([
+      ["burbs_enabled", data.burbsEnabled ? "1" : "0"],
+      ["team_enabled", data.teamEnabled ? "1" : "0"],
+    ]);
+  });
+
+/**
+ * The downloadable company profile. While no PDF exists the site hides the
+ * download button rather than linking nowhere.
+ */
+export const uploadCompanyProfile = createServerFn({ method: "POST" })
+  .inputValidator((formData: FormData) => formData)
+  .handler(async ({ data }): Promise<{ url: string }> => {
+    await requireAdmin();
+
+    const file = data.get("file");
+    if (!(file instanceof File)) throw new Error("Please choose a PDF file.");
+    if (file.type !== "application/pdf") throw new Error("The company profile must be a PDF.");
+    if (file.size === 0) throw new Error("That file appears to be empty.");
+    if (file.size > MAX_PDF_BYTES) {
+      throw new Error("That PDF is larger than 25 MB. Please compress it and try again.");
+    }
+
+    const previous = (await readSettings()).get("company_profile_pdf") ?? "";
+
+    // Named rather than UUID-only so the browser's download filename reads well.
+    const key = `docs/${crypto.randomUUID()}/champs-construction-company-profile.pdf`;
+    await getMedia().put(key, await file.arrayBuffer(), {
+      httpMetadata: {
+        contentType: "application/pdf",
+        contentDisposition: 'inline; filename="Champs Construction - Company Profile.pdf"',
+      },
+    });
+
+    const url = `/media/${key}`;
+    await writeSettings([["company_profile_pdf", url]]);
+    if (previous) await deleteMediaObjects([previous]);
+    return { url };
+  });
+
+export const removeCompanyProfile = createServerFn({ method: "POST" }).handler(
+  async (): Promise<void> => {
+    await requireAdmin();
+    const previous = (await readSettings()).get("company_profile_pdf") ?? "";
+    await writeSettings([["company_profile_pdf", ""]]);
+    if (previous) await deleteMediaObjects([previous]);
+  },
+);
+
+/* ---------- team ---------- */
+
+/** Five is the most the section lays out well, and the client asked for a cap. */
+export const MAX_TEAM_MEMBERS = 5;
+
+export type TeamFields = { name: string; role: string; bio: string };
+
+export const adminListTeam = createServerFn({ method: "GET" }).handler(
+  async (): Promise<TeamMember[]> => {
+    await requireAdmin();
+    const { results } = await getDb()
+      .prepare(`SELECT ${TEAM_COLUMNS} FROM team ORDER BY position, id`)
+      .all<TeamRow>();
+    return results.map(toTeamMember);
+  },
+);
+
+export const addTeamMember = createServerFn({ method: "POST" }).handler(
+  async (): Promise<{ id: number }> => {
+    await requireAdmin();
+    const db = getDb();
+    const count = await db.prepare(`SELECT COUNT(*) AS n FROM team`).first<{ n: number }>();
+    if ((count?.n ?? 0) >= MAX_TEAM_MEMBERS) {
+      throw new Error(`You can show up to ${MAX_TEAM_MEMBERS} team members.`);
+    }
+    const next = await db
+      .prepare(`SELECT COALESCE(MAX(position), 0) + 1 AS pos FROM team`)
+      .first<{ pos: number }>();
+    const result = await db
+      .prepare(`INSERT INTO team (name, role, position) VALUES ('', '', ?)`)
+      .bind(next?.pos ?? 1)
+      .run();
+    return { id: Number(result.meta.last_row_id) };
+  },
+);
+
+export const saveTeamMember = createServerFn({ method: "POST" })
+  .inputValidator((input: TeamFields & { id: number }) => input)
+  .handler(async ({ data }): Promise<void> => {
+    await requireAdmin();
+    await getDb()
+      .prepare(`UPDATE team SET name = ?, role = ?, bio = ? WHERE id = ?`)
+      .bind(
+        data.name.trim().slice(0, 80),
+        data.role.trim().slice(0, 80),
+        data.bio.trim().slice(0, 400),
+        positiveId(data.id),
+      )
+      .run();
+  });
+
+export const uploadTeamPhoto = createServerFn({ method: "POST" })
+  .inputValidator((formData: FormData) => formData)
+  .handler(async ({ data }): Promise<{ url: string }> => {
+    await requireAdmin();
+    const id = positiveId(data.get("id"));
+    const image = readImage(data);
+
+    const db = getDb();
+    const existing = await db
+      .prepare(`SELECT photo, name FROM team WHERE id = ?`)
+      .bind(id)
+      .first<{ photo: string | null; name: string }>();
+    if (!existing) throw new Error("That team member no longer exists.");
+
+    const url = await putImage(`team/${id}`, image);
+    await db
+      .prepare(`UPDATE team SET photo = ?, photo_alt = ? WHERE id = ?`)
+      .bind(url, existing.name ? `${existing.name}, Champs Construction` : "", id)
+      .run();
+
+    // One photo per member, so the previous file is now unreachable.
+    if (existing.photo) await deleteMediaObjects([existing.photo]);
+    return { url };
+  });
+
+export const removeTeamPhoto = createServerFn({ method: "POST" })
+  .inputValidator((id: number) => id)
+  .handler(async ({ data: id }): Promise<void> => {
+    await requireAdmin();
+    const db = getDb();
+    const row = await db
+      .prepare(`SELECT photo FROM team WHERE id = ?`)
+      .bind(positiveId(id))
+      .first<{ photo: string | null }>();
+    await db.prepare(`UPDATE team SET photo = NULL WHERE id = ?`).bind(positiveId(id)).run();
+    if (row?.photo) await deleteMediaObjects([row.photo]);
+  });
+
+export const setTeamHidden = createServerFn({ method: "POST" })
+  .inputValidator((input: { id: number; hidden: boolean }) => input)
+  .handler(async ({ data }): Promise<void> => {
+    await requireAdmin();
+    await getDb()
+      .prepare(`UPDATE team SET hidden = ? WHERE id = ?`)
+      .bind(data.hidden ? 1 : 0, positiveId(data.id))
+      .run();
+  });
+
+export const deleteTeamMember = createServerFn({ method: "POST" })
+  .inputValidator((id: number) => id)
+  .handler(async ({ data: id }): Promise<void> => {
+    await requireAdmin();
+    const db = getDb();
+    const row = await db
+      .prepare(`SELECT photo FROM team WHERE id = ?`)
+      .bind(positiveId(id))
+      .first<{ photo: string | null }>();
+    await db.prepare(`DELETE FROM team WHERE id = ?`).bind(positiveId(id)).run();
+    if (row?.photo) await deleteMediaObjects([row.photo]);
+  });
+
+export const moveTeamMember = createServerFn({ method: "POST" })
+  .inputValidator((input: { id: number; direction: "up" | "down" }) => input)
+  .handler(async ({ data }): Promise<void> => {
+    await requireAdmin();
+    await move("team", positiveId(data.id), data.direction);
+  });

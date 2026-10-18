@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X, Phone } from "lucide-react";
-import logo from "@/assets/champs-logo.svg";
+
 import { company, navLinks as links } from "@/lib/site-data";
 import { useContact } from "./use-site-data";
 
@@ -29,7 +29,6 @@ export function Navbar() {
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
           <Link
             to="/"
-            hash="home"
             className="flex items-center gap-3"
             aria-label="Champs Construction home"
           >
@@ -39,10 +38,10 @@ export function Navbar() {
               }`}
             >
               <img
-                src={logo}
+                src={company.logo}
                 alt={company.name}
-                width={734}
-                height={206}
+                width={1453}
+                height={470}
                 className="h-11 w-auto sm:h-12"
               />
             </span>
@@ -51,9 +50,10 @@ export function Navbar() {
           <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Main">
             {links.map((l) => (
               <Link
-                key={l.hash}
-                to="/"
-                hash={l.hash}
+                key={l.to}
+                to={l.to}
+                activeOptions={{ exact: l.to === "/" }}
+                activeProps={{ className: "after:w-6" }}
                 className={`relative rounded-full px-3 py-2 text-sm font-semibold transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-[2px] after:w-0 after:-translate-x-1/2 after:bg-accent-gradient after:transition-all after:duration-300 hover:after:w-6 ${
                   scrolled ? "text-brand-ink hover:text-brand" : "text-white/90 hover:text-white"
                 }`}
@@ -74,7 +74,7 @@ export function Navbar() {
               {contact.phone}
             </a>
             <Link
-              to="/"
+              to="/contact"
               hash="enquiry"
               className="hidden rounded-full bg-accent-gradient px-5 py-2.5 text-sm font-bold text-brand-ink shadow-accent transition-transform duration-300 hover:-translate-y-0.5 sm:inline-flex"
             >
@@ -110,11 +110,11 @@ export function Navbar() {
         >
           <div className="flex items-center justify-between">
             <img
-              src={logo}
+              src={company.logo}
               alt={company.name}
-              width={734}
-              height={206}
-              className="h-11 w-auto rounded-lg"
+              width={1453}
+              height={470}
+              className="h-11 w-auto"
             />
             <button
               aria-label="Close menu"
@@ -127,9 +127,8 @@ export function Navbar() {
           <nav className="mt-8 flex flex-col" aria-label="Mobile">
             {links.map((l) => (
               <Link
-                key={l.hash}
-                to="/"
-                hash={l.hash}
+                key={l.to}
+                to={l.to}
                 onClick={() => setOpen(false)}
                 className="border-b border-border/70 py-4 text-lg font-semibold text-brand-ink transition-colors hover:text-brand"
               >
@@ -138,7 +137,7 @@ export function Navbar() {
             ))}
           </nav>
           <Link
-            to="/"
+            to="/contact"
             hash="enquiry"
             onClick={() => setOpen(false)}
             className="mt-8 block rounded-full bg-accent-gradient px-6 py-3.5 text-center font-bold text-brand-ink shadow-accent"

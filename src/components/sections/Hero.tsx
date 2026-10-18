@@ -6,6 +6,7 @@ import houseScaffolding from "@/assets/stock-house-scaffolding.jpg";
 import workerMeasuring from "@/assets/stock-worker-measuring.jpg";
 import roofScaffolding from "@/assets/stock-roof-scaffolding.jpg";
 import engineer from "@/assets/stock-house-plastered-engineer.jpg";
+import { CompanyProfileButton } from "@/components/site/CompanyProfileButton";
 import { Counter, Reveal } from "@/components/site/Reveal";
 import { useContact, useSiteData } from "@/components/site/use-site-data";
 import { statLabels, trustBadges } from "@/lib/site-data";
@@ -121,7 +122,7 @@ export function Hero() {
         <Reveal>
           <span className="eyebrow text-accent-gold">
             <span className="h-[3px] w-8 rounded-full bg-current" aria-hidden />
-            Diaspora Home Construction
+            Turnkey Home Construction
           </span>
         </Reveal>
 
@@ -134,8 +135,8 @@ export function Hero() {
 
         <Reveal delay={200}>
           <p className="mt-7 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
-            In the diaspora and want to build a house in Zimbabwe? Champs Construction handles
-            everything — from materials to keys in your hands — with weekly progress updates at
+            Building in Zimbabwe, at home or from abroad? Champs Construction handles
+            everything — from materials to the keys in your hands — with one accountable team at
             every stage.
           </p>
         </Reveal>
@@ -152,13 +153,14 @@ export function Hero() {
               Start My Build — WhatsApp
             </a>
             <Link
-              to="/"
-              hash="projects"
+              to="/projects"
               className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-4 text-sm font-bold text-white backdrop-blur-md transition-colors duration-300 hover:bg-white hover:text-brand-ink"
             >
               <Images className="h-4 w-4" />
               See Our Work
             </Link>
+            {/* Appears only once a PDF has been uploaded in the dashboard. */}
+            <CompanyProfileButton tone="outline-dark" className="px-7 py-4" />
           </div>
         </Reveal>
 

@@ -2,7 +2,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Images, Inbox, MessageSquareQuote, Plus, Settings } from "lucide-react";
 
 import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
-import { adminListEnquiries, adminListProjects, adminListTestimonials } from "@/data/admin";
+import { adminListEnquiries, adminListWorkPhotos, adminListTestimonials } from "@/data/admin";
 import { checkAuth } from "@/data/auth";
 import { isPlaceholder } from "@/data/site-data";
 import { adminSeo } from "@/lib/admin-seo";
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/admin/")({
     if (!(await checkAuth())) throw redirect({ to: "/admin/login" });
     const [enquiries, projects, testimonials] = await Promise.all([
       adminListEnquiries(),
-      adminListProjects(),
+      adminListWorkPhotos(),
       adminListTestimonials(),
     ]);
     return { enquiries, projects, testimonials };
@@ -38,7 +38,7 @@ function Dashboard() {
           <strong>{fresh.length}</strong>
           <span>New build enquiries ({enquiries.length} in total)</span>
         </Link>
-        <Link to="/admin/projects" className="admin-stat">
+        <Link to="/admin/photos" className="admin-stat">
           <Images aria-hidden="true" />
           <strong>{projects.filter((p) => !p.hidden).length}</strong>
           <span>
@@ -91,7 +91,7 @@ function Dashboard() {
         <AdminCard title="Quick actions">
           <div className="admin-quick">
             <Link
-              to="/admin/projects/$id"
+              to="/admin/photos/$id"
               params={{ id: "new" }}
               className="admin-btn admin-btn-primary"
             >

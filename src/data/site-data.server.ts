@@ -7,6 +7,10 @@ import {
   type FounderSettings,
   type PhotoData,
   type ProjectRecord,
+  type ProjectImage,
+  type SiteToggles,
+  type TeamMember,
+  type WorkPhotoRecord,
   type SiteData,
   type Stage,
   type StatsSettings,
@@ -15,7 +19,7 @@ import {
 
 /* ---------- rows ---------- */
 
-export type ProjectRow = {
+export type WorkPhotoRow = {
   id: number;
   src: string;
   width: number;
@@ -26,9 +30,9 @@ export type ProjectRow = {
   hidden: number;
 };
 
-export const PROJECT_COLUMNS = `id, src, width, height, alt, caption, stage, hidden`;
+export const WORK_PHOTO_COLUMNS = `id, src, width, height, alt, caption, stage, hidden`;
 
-export function toProject(row: ProjectRow): ProjectRecord {
+export function toWorkPhoto(row: WorkPhotoRow): WorkPhotoRecord {
   return {
     id: row.id,
     src: row.src,
@@ -54,6 +58,78 @@ export const TESTIMONIAL_COLUMNS = `id, name, role, quote, hidden`;
 export function toTestimonial(row: TestimonialRow): TestimonialRecord {
   return { ...row, hidden: row.hidden === 1 };
 }
+
+export type ProjectRow = {
+  id: number;
+  slug: string;
+  title: string;
+  category: string;
+  location: string;
+  year: string;
+  status: string;
+  summary: string;
+  body: string;
+  scope: string;
+  cover: string | null;
+  cover_alt: string;
+  featured: number;
+  published: number;
+};
+
+export const PROJECT_COLUMNS = `id, slug, title, category, location, year, status, summary,
+  body, scope, cover, cover_alt, featured, published`;
+
+/** The scope textarea stores one item per line; the site wants an array. */
+export const toLines = (value: string): string[] =>
+  value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+export function toProject(row: ProjectRow): ProjectRecord {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    category: row.category,
+    location: row.location,
+    year: row.year,
+    status: row.status,
+    summary: row.summary,
+    body: row.body,
+    scope: toLines(row.scope),
+    cover: row.cover,
+    coverAlt: row.cover_alt || row.title,
+    featured: row.featured === 1,
+    published: row.published === 1,
+  };
+}
+
+export type TeamRow = {
+  id: number;
+  name: string;
+  role: string;
+  bio: string;
+  photo: string | null;
+  photo_alt: string;
+  hidden: number;
+};
+
+export const TEAM_COLUMNS = `id, name, role, bio, photo, photo_alt, hidden`;
+
+export function toTeamMember(row: TeamRow): TeamMember {
+  return {
+    id: row.id,
+    name: row.name,
+    role: row.role,
+    bio: row.bio,
+    photo: row.photo,
+    photoAlt: row.photo_alt || row.name,
+    hidden: row.hidden === 1,
+  };
+}
+
+export type { ProjectImage };
 
 /* ---------- settings ---------- */
 
@@ -127,14 +203,29 @@ export function burbsFrom(settings: Map<string, string>): BurbsSettings {
   };
 }
 
+/** A missing toggle defaults to on, so a fresh database shows the full site. */
+export function togglesFrom(settings: Map<string, string>): SiteToggles {
+  return {
+    burbsEnabled: (settings.get("burbs_enabled") ?? "1") === "1",
+    teamEnabled: (settings.get("team_enabled") ?? "1") === "1",
+    companyProfilePdf: settings.get("company_profile_pdf") ?? "",
+  };
+}
+
 /* ---------- public read ---------- */
 
 export async function loadSiteData(): Promise<SiteData> {
   const db = getDb();
-  const [projects, testimonials, settings] = await Promise.all([
+  const [workPhotos, projects, team, testimonials, settings] = await Promise.all([
     db
-      .prepare(`SELECT ${PROJECT_COLUMNS} FROM projects WHERE hidden = 0 ORDER BY position, id`)
+      .prepare(`SELECT ${WORK_PHOTO_COLUMNS} FROM work_photos WHERE hidden = 0 ORDER BY position, id`)
+      .all<WorkPhotoRow>(),
+    db
+      .prepare(`SELECT ${PROJECT_COLUMNS} FROM projects WHERE published = 1 ORDER BY position, id`)
       .all<ProjectRow>(),
+    db
+      .prepare(`SELECT ${TEAM_COLUMNS} FROM team WHERE hidden = 0 ORDER BY position, id`)
+      .all<TeamRow>(),
     db
       .prepare(
         `SELECT ${TESTIMONIAL_COLUMNS} FROM testimonials WHERE hidden = 0 ORDER BY position, id`,
@@ -147,7 +238,10 @@ export async function loadSiteData(): Promise<SiteData> {
     founder: founderFrom(settings),
     stats: statsFrom(settings),
     burbs: burbsFrom(settings),
+    workPhotos: workPhotos.results.map(toWorkPhoto),
     projects: projects.results.map(toProject),
+    team: team.results.map(toTeamMember),
+    toggles: togglesFrom(settings),
     testimonials: testimonials.results.map(toTestimonial),
     live: true,
   };

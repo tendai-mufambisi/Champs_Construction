@@ -1,18 +1,22 @@
 import { createFileRoute, Link, redirect, useRouter } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, HardHat, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import { AdminShell, ProjectThumb } from "@/components/admin/AdminShell";
+import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
 import { errorText } from "@/components/admin/prepare-image";
-import { adminListProjects, deleteProject, moveProject, setProjectHidden } from "@/data/admin";
+import {
+  adminListProjectPages,
+  deleteProjectPage,
+  moveProjectPage,
+  saveProjectPage,
+} from "@/data/admin-projects";
 import { checkAuth } from "@/data/auth";
-import { isPlaceholder, stages, type ProjectRecord } from "@/data/site-data";
 import { adminSeo } from "@/lib/admin-seo";
 
 export const Route = createFileRoute("/admin/projects/")({
   loader: async () => {
     if (!(await checkAuth())) throw redirect({ to: "/admin/login" });
-    return { projects: await adminListProjects() };
+    return { projects: await adminListProjectPages() };
   },
   head: () => adminSeo("Projects"),
   component: ProjectsAdmin,
@@ -21,145 +25,144 @@ export const Route = createFileRoute("/admin/projects/")({
 function ProjectsAdmin() {
   const { projects } = Route.useLoaderData();
   const router = useRouter();
-  const [filter, setFilter] = useState<string>("All");
-  const [busyId, setBusyId] = useState<number | null>(null);
-  const [error, setError] = useState("");
+  const [state, setState] = useState({ busy: false, error: "" });
 
-  const shown = projects.filter((p) => filter === "All" || p.stage === filter);
-  // Reordering only makes sense on the full list, where neighbours are real neighbours.
-  const canReorder = filter === "All";
+  async function onAdd() {
+    setState({ busy: true, error: "" });
+    try {
+      // Created as a draft so a half-written page is never live.
+      const { id } = await saveProjectPage({
+        data: {
+          title: "New project",
+          category: "",
+          location: "",
+          year: String(new Date().getFullYear()),
+          status: "Completed",
+          summary: "",
+          body: "",
+          scope: "",
+          featured: false,
+          published: false,
+        },
+      });
+      await router.navigate({ to: "/admin/projects/$id", params: { id: String(id) } });
+    } catch (e) {
+      setState({ busy: false, error: errorText(e) });
+    }
+  }
 
-  async function run(id: number, action: () => Promise<unknown>) {
-    setBusyId(id);
-    setError("");
+  async function run(action: () => Promise<unknown>) {
+    setState({ busy: true, error: "" });
     try {
       await action();
       await router.invalidate();
+      setState({ busy: false, error: "" });
     } catch (e) {
-      setError(errorText(e));
+      setState({ busy: false, error: errorText(e) });
     }
-    setBusyId(null);
   }
-
-  const remove = (p: ProjectRecord) => {
-    if (!window.confirm(`Delete "${p.caption}"? This can't be undone.`)) return;
-    void run(p.id, () => deleteProject({ data: p.id }));
-  };
 
   return (
     <AdminShell
       title="Projects"
-      description="The Before / During / After photos in the Our Work section, in this order. Replace the placeholders with real Champs photos as soon as you have them."
+      description="Each project gets its own page on the website. Add photos, a description and the scope of work."
       actions={
-        <Link
-          to="/admin/projects/$id"
-          params={{ id: "new" }}
+        <button
+          type="button"
           className="admin-btn admin-btn-primary"
+          onClick={onAdd}
+          disabled={state.busy}
         >
-          <Plus size={17} aria-hidden="true" /> Add photo
-        </Link>
+          <Plus className="h-4 w-4" />
+          Add project
+        </button>
       }
     >
-      <div className="admin-filters" role="group" aria-label="Filter by stage">
-        {["All", ...stages].map((c) => (
-          <button
-            key={c}
-            type="button"
-            className="admin-chip"
-            aria-pressed={filter === c}
-            onClick={() => setFilter(c)}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
-      {!canReorder && <p className="admin-muted">Show “All” to change the order.</p>}
-      {error && (
-        <p role="alert" className="admin-error">
-          {error}
-        </p>
-      )}
+      {state.error ? <p className="admin-error">{state.error}</p> : null}
 
-      {shown.length === 0 ? (
-        <p className="admin-muted">No photos for this stage yet.</p>
+      {projects.length === 0 ? (
+        <AdminCard>
+          <p>
+            No projects yet. Add your first one — it will appear on the website once you tick
+            &ldquo;Show on the website&rdquo;.
+          </p>
+        </AdminCard>
       ) : (
-        <ul className="admin-list admin-list-rows">
-          {shown.map((p, i) => (
-            <li
-              key={p.id}
-              className={p.hidden ? "is-hidden" : undefined}
-              aria-busy={busyId === p.id}
-            >
-              <ProjectThumb project={p} />
-              <div className="admin-list-text">
-                <strong>{p.caption}</strong>
-                <small>
-                  {p.stage}
-                  {isPlaceholder(p.src) && " · Placeholder, replace with a real photo"}
-                  {p.hidden && " · Hidden from the website"}
-                </small>
-              </div>
-              <div className="admin-row-actions">
-                {canReorder && (
-                  <>
-                    <button
-                      type="button"
-                      className="admin-icon-btn"
-                      aria-label={`Move "${p.caption}" up`}
-                      disabled={i === 0 || busyId !== null}
-                      onClick={() =>
-                        run(p.id, () => moveProject({ data: { id: p.id, direction: "up" } }))
+        <AdminCard>
+          <ul className="admin-list">
+            {projects.map((project, index) => (
+              <li key={project.id} className="admin-row">
+                <div className="admin-thumb">
+                  {project.cover ? (
+                    <img src={project.cover} alt="" loading="lazy" />
+                  ) : (
+                    <span className="grid h-full w-full place-items-center">
+                      <HardHat className="h-6 w-6 opacity-25" aria-hidden />
+                    </span>
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <strong>{project.title}</strong>
+                  <p>
+                    {[project.category, project.location, project.year].filter(Boolean).join(" · ") ||
+                      "No details yet"}
+                  </p>
+                  <div className="admin-row-actions">
+                    {project.published ? (
+                      <span className="admin-pill">Live</span>
+                    ) : (
+                      <span className="admin-pill">Draft</span>
+                    )}
+                    {project.featured ? <span className="admin-pill">Featured</span> : null}
+                  </div>
+                </div>
+
+                <div className="admin-actions">
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-small"
+                    disabled={state.busy || index === 0}
+                    onClick={() => run(() => moveProjectPage({ data: { id: project.id, direction: "up" } }))}
+                    aria-label="Move up"
+                  >
+                    <ArrowUp className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-small"
+                    disabled={state.busy || index === projects.length - 1}
+                    onClick={() => run(() => moveProjectPage({ data: { id: project.id, direction: "down" } }))}
+                    aria-label="Move down"
+                  >
+                    <ArrowDown className="h-4 w-4" />
+                  </button>
+                  <Link
+                    to="/admin/projects/$id"
+                    params={{ id: String(project.id) }}
+                    className="admin-btn admin-btn-small"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Edit
+                  </Link>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-small"
+                    disabled={state.busy}
+                    onClick={() => {
+                      if (confirm(`Delete "${project.title}" and its photos? This cannot be undone.`)) {
+                        void run(() => deleteProjectPage({ data: project.id }));
                       }
-                    >
-                      <ArrowUp size={17} />
-                    </button>
-                    <button
-                      type="button"
-                      className="admin-icon-btn"
-                      aria-label={`Move "${p.caption}" down`}
-                      disabled={i === shown.length - 1 || busyId !== null}
-                      onClick={() =>
-                        run(p.id, () => moveProject({ data: { id: p.id, direction: "down" } }))
-                      }
-                    >
-                      <ArrowDown size={17} />
-                    </button>
-                  </>
-                )}
-                <button
-                  type="button"
-                  className="admin-icon-btn"
-                  aria-label={
-                    p.hidden ? `Show "${p.caption}" on the website` : `Hide "${p.caption}"`
-                  }
-                  title={p.hidden ? "Show on the website" : "Hide from the website"}
-                  disabled={busyId !== null}
-                  onClick={() =>
-                    run(p.id, () => setProjectHidden({ data: { id: p.id, hidden: !p.hidden } }))
-                  }
-                >
-                  {p.hidden ? <EyeOff size={17} /> : <Eye size={17} />}
-                </button>
-                <Link
-                  to="/admin/projects/$id"
-                  params={{ id: String(p.id) }}
-                  className="admin-btn admin-btn-small"
-                >
-                  Edit
-                </Link>
-                <button
-                  type="button"
-                  className="admin-icon-btn admin-icon-danger"
-                  aria-label={`Delete "${p.caption}"`}
-                  disabled={busyId !== null}
-                  onClick={() => remove(p)}
-                >
-                  <Trash2 size={17} />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                    }}
+                    aria-label="Delete"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </AdminCard>
       )}
     </AdminShell>
   );

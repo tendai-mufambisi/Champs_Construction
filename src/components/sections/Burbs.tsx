@@ -16,8 +16,13 @@ import { burbsEnquiryText } from "@/lib/site-data";
  * The legal status must always be shown in full and in plain sight, never as fine print.
  */
 export function Burbs() {
-  const { burbs } = useSiteData();
+  const { burbs, toggles } = useSiteData();
   const contact = useContact();
+
+  // The Burbs is a land offering rather than core construction work, so the
+  // owner can switch the whole section off from the dashboard without losing
+  // the details already captured.
+  if (!toggles.burbsEnabled) return null;
 
   const details = [
     { icon: MapPin, label: "Location", value: burbs.location },

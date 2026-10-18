@@ -1,228 +1,326 @@
 import { createFileRoute, Link, notFound, redirect, useRouter } from "@tanstack/react-router";
-import { ImagePlus } from "lucide-react";
-import { useRef, useState, type FormEvent } from "react";
+import { ArrowLeft, Star, Trash2 } from "lucide-react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 
-import { AdminCard, AdminShell, ProjectThumb } from "@/components/admin/AdminShell";
+import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
+import { errorText, imageForm, prepareImage } from "@/components/admin/prepare-image";
 import {
-  errorText,
-  imageForm,
-  prepareImage,
-  type PreparedImage,
-} from "@/components/admin/prepare-image";
-import { adminGetProject, createProject, replaceProjectPhoto, saveProject } from "@/data/admin";
+  adminGetProjectPage,
+  deleteProjectImage,
+  saveProjectPage,
+  setProjectCover,
+  uploadProjectImage,
+} from "@/data/admin-projects";
 import { checkAuth } from "@/data/auth";
-import { isPlaceholder, stages } from "@/data/site-data";
+import { projectStatuses } from "@/data/site-data";
 import { adminSeo } from "@/lib/admin-seo";
 
 export const Route = createFileRoute("/admin/projects/$id")({
   loader: async ({ params }) => {
     if (!(await checkAuth())) throw redirect({ to: "/admin/login" });
-    if (params.id === "new") return { project: null };
-    const project = await adminGetProject({ data: Number(params.id) });
-    if (!project) throw notFound();
-    return { project };
+    const detail = await adminGetProjectPage({ data: Number(params.id) });
+    if (!detail) throw notFound();
+    return detail;
   },
-  head: ({ params }) => adminSeo(params.id === "new" ? "Add a project photo" : "Edit project"),
+  head: () => adminSeo("Edit project"),
   component: ProjectEditor,
 });
 
-const stageHints: Record<string, string> = {
-  Before: "The stand, site clearance, setting out or the team ready to start.",
-  During: "Foundations, walls, roofing and work in progress.",
-  After: "Finished homes and handovers.",
-};
-
 function ProjectEditor() {
-  const { project } = Route.useLoaderData();
+  const { project, images } = Route.useLoaderData();
   const router = useRouter();
-  const isNew = project === null;
-  const placeholder = project ? isPlaceholder(project.src) : false;
 
-  // A placeholder's caption starts with the "[REPLACE…]" note; drop it when editing.
-  const initialCaption = (project?.caption ?? "").replace(
-    /^\[REPLACE WITH CHAMPS PROJECT PHOTO\]\s*/,
-    "",
-  );
-  const [caption, setCaption] = useState(initialCaption);
-  const [stage, setStage] = useState<string>(project?.stage ?? "");
-  const [alt, setAlt] = useState(
-    project && project.alt !== project.caption && !placeholder ? project.alt : "",
-  );
-  const [image, setImage] = useState<PreparedImage | null>(null);
-  const [preparing, setPreparing] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [saved, setSaved] = useState("");
-  const fileInput = useRef<HTMLInputElement>(null);
-
-  async function choose(file: File | undefined) {
-    if (!file) return;
-    setError("");
-    setPreparing(true);
-    try {
-      setImage(await prepareImage(file));
-    } catch (e) {
-      setError(errorText(e));
-    }
-    setPreparing(false);
-  }
+  const [form, setForm] = useState({
+    title: project.title,
+    category: project.category,
+    location: project.location,
+    year: project.year,
+    status: project.status,
+    summary: project.summary,
+    body: project.body,
+    scope: project.scope.join("\n"),
+    featured: project.featured,
+    published: project.published,
+  });
+  const [state, setState] = useState({ busy: false, error: "", saved: false });
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
-    setError("");
-    setSaved("");
-    if (isNew && !image) {
-      setError("Please choose a photo first.");
-      return;
-    }
-    if (placeholder && !image) {
-      setError("This is still a placeholder. Choose a real photo to replace it.");
-      return;
-    }
-    setBusy(true);
+    setState({ busy: true, error: "", saved: false });
     try {
-      const fields = { caption, stage, alt };
-      if (isNew) {
-        const { id } = await createProject({ data: imageForm(image!, fields) });
-        await router.invalidate();
-        await router.navigate({ to: "/admin/projects/$id", params: { id: String(id) } });
-        return;
-      }
-      await saveProject({ data: { id: project.id, ...fields } });
-      if (image) {
-        await replaceProjectPhoto({ data: imageForm(image, { id: String(project.id) }) });
-        setImage(null);
-      }
+      await saveProjectPage({ data: { ...form, id: project.id } });
       await router.invalidate();
-      setSaved("Saved. The website is updated.");
+      setState({ busy: false, error: "", saved: true });
     } catch (e) {
-      setError(errorText(e));
+      setState({ busy: false, error: errorText(e), saved: false });
     }
-    setBusy(false);
   }
 
   return (
     <AdminShell
-      title={isNew ? "Add a project photo" : placeholder ? "Replace placeholder" : "Edit project"}
-      description={
-        isNew || placeholder
-          ? "Take or choose a photo from a real Champs site, then pick its stage."
-          : undefined
-      }
+      title={project.title}
+      description="This page appears at /projects/ on the website."
       actions={
-        <Link to="/admin/projects" className="admin-btn">
-          Back to projects
+        <Link to="/admin/projects" className="admin-btn admin-btn-small">
+          <ArrowLeft className="h-4 w-4" />
+          All projects
         </Link>
       }
     >
-      <form onSubmit={onSubmit} className="admin-editor">
-        <AdminCard title="Photo">
-          <div className="admin-photo">
-            {image ? (
-              <img src={image.previewUrl} alt="" className="admin-photo-preview" />
-            ) : project ? (
-              <ProjectThumb project={project} className="admin-photo-preview" />
-            ) : (
-              <button
-                type="button"
-                className="admin-dropzone"
-                onClick={() => fileInput.current?.click()}
-              >
-                <ImagePlus size={30} aria-hidden="true" />
-                {preparing ? "Preparing photo…" : "Tap to choose a photo"}
-              </button>
-            )}
-            <input
-              ref={fileInput}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif"
-              hidden
-              onChange={(e) => {
-                void choose(e.target.files?.[0]);
-                e.target.value = "";
-              }}
-            />
-            {(image || project) && (
-              <button
-                type="button"
-                className={placeholder && !image ? "admin-btn admin-btn-primary" : "admin-btn"}
-                disabled={preparing}
-                onClick={() => fileInput.current?.click()}
-              >
-                {preparing
-                  ? "Preparing photo…"
-                  : image
-                    ? "Choose a different photo"
-                    : placeholder
-                      ? "Choose the real photo"
-                      : "Replace photo"}
-              </button>
-            )}
-            <p className="admin-muted">
-              Photos are resized automatically. Use photos of real Champs sites only — never stock
-              or AI images.
-            </p>
-          </div>
-        </AdminCard>
-
+      <div className="admin-two-col">
         <AdminCard title="Details">
-          <div className="admin-form">
-            <label className="admin-field">
-              <span>Caption</span>
+          <form className="admin-form" onSubmit={onSubmit}>
+            <div className="admin-field">
+              <label htmlFor="title">Project title</label>
               <input
+                id="title"
                 required
-                maxLength={140}
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-                placeholder="e.g. Three-bedroom house, roof going on"
+                value={form.title}
+                maxLength={120}
+                placeholder="e.g. Four-bedroom house, Chivhu"
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
-            </label>
-            <label className="admin-field">
-              <span>Stage</span>
-              <select required value={stage} onChange={(e) => setStage(e.target.value)}>
-                <option value="" disabled>
-                  Choose a stage
-                </option>
-                {stages.map((s) => (
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="category">Type of work</label>
+              <input
+                id="category"
+                value={form.category}
+                maxLength={60}
+                placeholder="e.g. Residential build, Boundary wall"
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="location">Location</label>
+              <input
+                id="location"
+                value={form.location}
+                maxLength={120}
+                placeholder="e.g. Chivhu"
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="year">Year</label>
+              <input
+                id="year"
+                value={form.year}
+                maxLength={12}
+                placeholder="e.g. 2026"
+                onChange={(e) => setForm({ ...form, year: e.target.value })}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="status">Status</label>
+              <select
+                id="status"
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                {projectStatuses.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
                 ))}
               </select>
-              {stage && <small className="admin-muted">{stageHints[stage]}</small>}
-            </label>
-            <label className="admin-field">
-              <span>Description for Google and screen readers (optional)</span>
-              <input
-                maxLength={300}
-                value={alt}
-                onChange={(e) => setAlt(e.target.value)}
-                placeholder="Leave empty to use the caption"
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="summary">Short summary</label>
+              <textarea
+                id="summary"
+                rows={3}
+                value={form.summary}
+                maxLength={400}
+                placeholder="One or two sentences. This shows on the project card."
+                onChange={(e) => setForm({ ...form, summary: e.target.value })}
               />
-            </label>
-          </div>
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="body">Full description</label>
+              <textarea
+                id="body"
+                rows={10}
+                value={form.body}
+                placeholder={"## The brief\n\nWhat the client wanted.\n\n## What we did\n\n- Point one\n- Point two"}
+                onChange={(e) => setForm({ ...form, body: e.target.value })}
+              />
+              <small>
+                Use ## for a heading, - for a bullet and **bold** for emphasis. Leave it empty and
+                the summary is shown instead.
+              </small>
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="scope">Scope of work — one per line</label>
+              <textarea
+                id="scope"
+                rows={6}
+                value={form.scope}
+                placeholder={"Foundations\nBrickwork\nRoofing\nPlumbing and electrical"}
+                onChange={(e) => setForm({ ...form, scope: e.target.value })}
+              />
+            </div>
+
+            <div className="admin-check-grid">
+              <label className="admin-check">
+                <input
+                  type="checkbox"
+                  checked={form.published}
+                  onChange={(e) => setForm({ ...form, published: e.target.checked })}
+                />
+                Show on the website
+              </label>
+              <label className="admin-check">
+                <input
+                  type="checkbox"
+                  checked={form.featured}
+                  onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                />
+                Feature on the home page
+              </label>
+            </div>
+
+            {state.error ? <p className="admin-error">{state.error}</p> : null}
+            {state.saved ? <p className="admin-success">Saved.</p> : null}
+
+            <button type="submit" className="admin-btn admin-btn-primary" disabled={state.busy}>
+              {state.busy ? "Saving…" : "Save changes"}
+            </button>
+          </form>
         </AdminCard>
 
-        {error && (
-          <p role="alert" className="admin-error">
-            {error}
-          </p>
-        )}
-        {saved && (
-          <p role="status" className="admin-success">
-            {saved}
-          </p>
-        )}
-        <div className="admin-actions">
-          <button
-            type="submit"
-            disabled={busy || preparing}
-            className="admin-btn admin-btn-primary"
-          >
-            {busy ? "Saving…" : isNew ? "Add to website" : "Save changes"}
-          </button>
-        </div>
-      </form>
+        <GalleryCard projectId={project.id} cover={project.cover} images={images} />
+      </div>
     </AdminShell>
+  );
+}
+
+function GalleryCard({
+  projectId,
+  cover,
+  images,
+}: {
+  projectId: number;
+  cover: string | null;
+  images: { id: number; url: string; alt: string }[];
+}) {
+  const router = useRouter();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [alt, setAlt] = useState("");
+  const [state, setState] = useState({ busy: false, error: "", progress: "" });
+
+  async function run(action: () => Promise<unknown>) {
+    setState({ busy: true, error: "", progress: "" });
+    try {
+      await action();
+      await router.invalidate();
+      setState({ busy: false, error: "", progress: "" });
+    } catch (e) {
+      setState({ busy: false, error: errorText(e), progress: "" });
+    }
+  }
+
+  async function onUpload(event: ChangeEvent<HTMLInputElement>) {
+    const files = [...(event.target.files ?? [])];
+    if (files.length === 0) return;
+
+    setState({ busy: true, error: "", progress: "" });
+    try {
+      // Sequential rather than parallel: each upload also writes a row, and
+      // ordering keeps the gallery positions predictable.
+      for (const [index, file] of files.entries()) {
+        setState({ busy: true, error: "", progress: `Uploading ${index + 1} of ${files.length}…` });
+        const prepared = await prepareImage(file);
+        await uploadProjectImage({
+          data: imageForm(prepared, { projectId: String(projectId), alt }),
+        });
+      }
+      setAlt("");
+      await router.invalidate();
+      setState({ busy: false, error: "", progress: "" });
+    } catch (e) {
+      setState({ busy: false, error: errorText(e), progress: "" });
+    }
+    if (fileInput.current) fileInput.current.value = "";
+  }
+
+  return (
+    <AdminCard
+      title="Photos"
+      description="The cover is what shows on the project card. The rest appear in the gallery on the project page."
+    >
+      <div className="admin-field">
+        <label htmlFor="photo-alt">Describe these photos (for accessibility)</label>
+        <input
+          id="photo-alt"
+          value={alt}
+          maxLength={300}
+          placeholder="e.g. Completed four-bedroom house in Chivhu"
+          onChange={(e) => setAlt(e.target.value)}
+        />
+      </div>
+
+      <label className="admin-btn admin-btn-block">
+        {state.progress || "Choose photos"}
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/avif"
+          multiple
+          disabled={state.busy}
+          onChange={onUpload}
+          className="sr-only"
+        />
+      </label>
+
+      {state.error ? <p className="admin-error">{state.error}</p> : null}
+
+      {images.length === 0 ? (
+        <p>No photos yet. The project shows a placeholder until you add one.</p>
+      ) : (
+        <ul className="admin-photo-grid">
+          {images.map((image) => {
+            const isCover = image.url === cover;
+            return (
+              <li key={image.id} className="admin-photo">
+                <img src={image.url} alt={image.alt} loading="lazy" />
+                {isCover ? <span className="admin-pill">Cover</span> : null}
+                <div className="admin-actions">
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-small"
+                    disabled={state.busy || isCover}
+                    onClick={() =>
+                      run(() =>
+                        setProjectCover({ data: { projectId, url: image.url, alt: image.alt } }),
+                      )
+                    }
+                  >
+                    <Star className="h-4 w-4" />
+                    Cover
+                  </button>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-small"
+                    disabled={state.busy}
+                    onClick={() => run(() => deleteProjectImage({ data: { projectId, imageId: image.id } }))}
+                    aria-label="Delete photo"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </AdminCard>
   );
 }

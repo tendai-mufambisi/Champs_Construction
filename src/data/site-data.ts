@@ -14,7 +14,7 @@ import {
 export const stages = ["Before", "During", "After"] as const;
 export type Stage = (typeof stages)[number];
 
-export type ProjectRecord = {
+export type WorkPhotoRecord = {
   id: number;
   /** URL path: /images/… (shipped with the site) or /media/… (R2 upload). */
   src: string;
@@ -59,13 +59,61 @@ export type StatsSettings = Record<StatKey, string>;
 
 export type BurbsSettings = typeof burbsDefaults;
 
+/** A project with its own page at /projects/<slug>. */
+export type ProjectRecord = {
+  id: number;
+  slug: string;
+  title: string;
+  category: string;
+  location: string;
+  year: string;
+  status: string;
+  summary: string;
+  body: string;
+  scope: string[];
+  /** '/media/…' once a photo is uploaded, otherwise null. */
+  cover: string | null;
+  coverAlt: string;
+  featured: boolean;
+  published: boolean;
+};
+
+export type ProjectImage = { id: number; url: string; alt: string };
+
+export const projectStatuses = ["Completed", "In Progress", "Upcoming"] as const;
+export type ProjectStatus = (typeof projectStatuses)[number];
+
+/** A member of the team. Blank name and photo are normal: the slots ship empty. */
+export type TeamMember = {
+  id: number;
+  name: string;
+  role: string;
+  bio: string;
+  photo: string | null;
+  photoAlt: string;
+  hidden: boolean;
+};
+
+/** Sections the owner can switch off, and the uploaded company profile. */
+export type SiteToggles = {
+  burbsEnabled: boolean;
+  teamEnabled: boolean;
+  /** '/media/…' to the PDF, or '' while none is uploaded. */
+  companyProfilePdf: string;
+};
+
 export type SiteData = {
   contact: ContactSettings;
   founder: FounderSettings;
   stats: StatsSettings;
   burbs: BurbsSettings;
-  /** Visible projects only, in display order. */
+  /** Visible Before/During/After photos only, in display order. */
+  workPhotos: WorkPhotoRecord[];
+  /** Published projects, in display order. Each has its own page. */
   projects: ProjectRecord[];
+  /** Visible team members, in display order. Blank slots are kept: they render as placeholders. */
+  team: TeamMember[];
+  toggles: SiteToggles;
   /** Visible testimonials only, in display order. Empty = show the placeholders. */
   testimonials: TestimonialRecord[];
   /** False when this is the fallback (D1 unreachable or not configured). */
@@ -85,7 +133,7 @@ export const FALLBACK_CONTACT: ContactSettings = {
   community: company.community,
 };
 
-export const FALLBACK_PROJECTS: ProjectRecord[] = [
+export const FALLBACK_PROJECTS: WorkPhotoRecord[] = [
   {
     id: 1,
     src: "/images/projects/champs-team-on-site.jpg",
@@ -143,7 +191,10 @@ export const FALLBACK_SITE_DATA: SiteData = {
   founder: { name: "Mr. Regai", quote: FOUNDER_QUOTE_PLACEHOLDER, photo: null },
   stats: { homes: "", diaspora: "", years: "" },
   burbs: burbsDefaults,
-  projects: FALLBACK_PROJECTS,
+  workPhotos: FALLBACK_PROJECTS,
+  projects: [],
+  team: [],
+  toggles: { burbsEnabled: true, teamEnabled: true, companyProfilePdf: "" },
   testimonials: [],
   live: false,
 };

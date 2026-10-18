@@ -10,7 +10,7 @@ const pillars = [
   {
     icon: Eye,
     title: "Our Promise",
-    body: "From site clearance until we hand you the keys, with weekly progress reports, so you always know exactly what is happening, wherever you are.",
+    body: "From site clearance until we hand you the keys, with one accountable team and every stage signed off before the next begins.",
   },
   {
     icon: ShieldCheck,
@@ -77,7 +77,7 @@ export function About() {
                 </p>
                 <p>
                   Building from abroad is hard when you can't see the site. That is why every Champs
-                  client receives weekly progress reports with photos, and deals with one
+                  client deals with one named point of contact from quotation to handover, and one
                   accountable team from the first consultation to the day the keys are handed over.
                 </p>
               </div>

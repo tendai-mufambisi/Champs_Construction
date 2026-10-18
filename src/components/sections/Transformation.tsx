@@ -3,13 +3,13 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
 import { useSiteData } from "@/components/site/use-site-data";
-import { FALLBACK_PROJECTS, type ProjectRecord, type Stage } from "@/data/site-data";
+import { FALLBACK_PROJECTS, type WorkPhotoRecord, type Stage } from "@/data/site-data";
 
 const stages: { label: Stage; title: string; body: string }[] = [
   {
     label: "Before",
     title: "A cleared stand and a team ready",
-    body: "Site preparation: the stand is cleared and set out, materials arrive and our team is on site. You get the first photos in your weekly report.",
+    body: "Site preparation: the stand is cleared and set out, materials arrive and our team is on site.",
   },
   {
     label: "During",
@@ -27,7 +27,7 @@ const badge =
   "rounded-full px-3 py-1 text-[11px] font-bold tracking-[0.16em] uppercase shadow-soft";
 
 /** The first visible photo for a stage, or the shipped one if the owner removed them all. */
-function photoFor(projects: ProjectRecord[], stage: Stage): ProjectRecord {
+function photoFor(projects: WorkPhotoRecord[], stage: Stage): WorkPhotoRecord {
   return (
     projects.find((p) => p.stage === stage) ?? FALLBACK_PROJECTS.find((p) => p.stage === stage)!
   );
@@ -47,7 +47,7 @@ export function Transformation() {
   const sectionRef = useRef<HTMLElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   const [stage, setStage] = useState(0);
-  const { projects } = useSiteData();
+  const { workPhotos: projects } = useSiteData();
   const photos = stages.map((s) => photoFor(projects, s.label));
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export function Transformation() {
             <Reveal>
               <span className="eyebrow text-brand">
                 <span className="h-[3px] w-8 rounded-full bg-accent-gold" aria-hidden />
-                Weekly Progress Reports
+                Stage-By-Stage Sign-Off
               </span>
             </Reveal>
             <Reveal delay={80}>

@@ -9,6 +9,15 @@ export const SITE_URL = "https://champs.digitsdigital.co.zw";
 
 export const company = {
   name: "Champs Construction",
+  // Supplied artwork, in public/. The site shipped with a drawn-in-code
+  // placeholder in yellow-green which was never the real mark.
+  //   logo        mark + wordmark, tagline cropped off (headers, footers)
+  //   logoDark    full lockup, tagline in WHITE, for dark backgrounds
+  //   logoLight   full lockup, tagline in BLACK, for light backgrounds
+  logo: "/logo-wordmark.png",
+  logoDark: "/champs-logo-dark.png",
+  logoLight: "/champs-logo-light.png",
+  ogImage: "/og-image.png",
   shortName: "Champs",
   tagline: "Building Partners You Can Trust",
   // Primary line (also WhatsApp), as on the client's flyer.
@@ -27,23 +36,23 @@ export const company = {
 
 export const whatsappText = "Hi Champs Construction, I'd like to build a house in Zimbabwe.";
 
+// Real pages rather than hash jumps: each one can rank on its own terms, which
+// a single scrolling page cannot do.
 export const navLinks = [
-  { label: "Home", hash: "home" },
-  { label: "About", hash: "about" },
-  { label: "Services", hash: "services" },
-  { label: "How It Works", hash: "how-it-works" },
-  { label: "Projects", hash: "projects" },
-  { label: "The Burbs", hash: "the-burbs" },
-  { label: "FAQ", hash: "faq" },
-  { label: "Contact", hash: "contact" },
-];
+  { label: "Home", to: "/" },
+  { label: "Projects", to: "/projects" },
+  { label: "Services", to: "/services" },
+  { label: "About", to: "/about" },
+  { label: "Contact", to: "/contact" },
+] as const;
+
+export type NavLink = (typeof navLinks)[number];
 
 // Hero trust strip.
 export const trustBadges = [
-  "Weekly Progress Reports",
   "Materials Supplied",
   "Turnkey Handover",
-  "Local & Diaspora Clients",
+  "Fixed, Written Quotations",
 ];
 
 // Stats bar labels. The numbers are set in the dashboard; until then they show "[X]".
@@ -67,8 +76,8 @@ export const trustPillars = [
   },
   {
     icon: "CalendarCheck",
-    title: "Weekly Progress Reports",
-    body: "Every week you receive photos and an update on WhatsApp, so you always know exactly what is happening on site, wherever you are.",
+    title: "Clear Communication",
+    body: "One point of contact from quotation to handover, and a straight answer whenever you ask where the build has reached.",
   },
   {
     icon: "ShieldCheck",
@@ -98,8 +107,8 @@ export const comparison = {
     points: [
       "One accountable team",
       "Materials handled",
-      "Weekly reports",
       "Transparent progress",
+      "Fixed written quotations",
       "Keys on handover",
     ],
   },
@@ -178,7 +187,7 @@ export const process = [
   {
     step: "04",
     title: "Construction",
-    body: "Foundation to roof, with weekly photo and progress reports.",
+    body: "Foundation to roof, with every stage checked before the next begins.",
   },
   {
     step: "05",
@@ -217,12 +226,12 @@ export const testimonialPlaceholders = [1, 2, 3].map(() => ({
 
 export const faqs = [
   {
-    q: "I live outside Zimbabwe. Can you build my house for me?",
-    a: "Yes, that is exactly what we do. We handle the materials, the construction and the handover in Zimbabwe, and keep you updated every week, so you can follow your build from wherever you live.",
+    q: "How will I know what is happening on site?",
+    a: "You deal with one point of contact for the whole build. Ask at any time and you get a straight answer on what has been done and what comes next, and you are welcome on site whenever you want to see it for yourself.",
   },
   {
-    q: "How will I know what is happening on site?",
-    a: "You receive a weekly progress report on WhatsApp with photos and an update on what was done and what comes next. You can also ask for a video call.",
+    q: "I live outside Zimbabwe. Can you build my house for me?",
+    a: "Yes. We handle the materials, the construction and the handover here in Zimbabwe, and keep you updated so you can follow the build from wherever you live.",
   },
   {
     q: "Do you supply the building materials?",

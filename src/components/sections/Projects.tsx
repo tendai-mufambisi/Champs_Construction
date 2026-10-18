@@ -18,7 +18,7 @@ const stageTone: Record<Stage, string> = {
 // Photos are managed by the owner from /admin/projects. The first visible photo is
 // shown large; every card opens the full-screen viewer.
 export function Projects() {
-  const { projects } = useSiteData();
+  const { workPhotos: projects } = useSiteData();
   const contact = useContact();
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -35,7 +35,7 @@ export function Projects() {
         <SectionHeading
           eyebrow="Our Work"
           title="Before. During. After."
-          subtitle="Every build follows the same path, and our clients see each stage in their weekly reports. Here is a look at our sites."
+          subtitle="Every build follows the same path. Here is a look at our sites, stage by stage."
         />
 
         <Reveal>

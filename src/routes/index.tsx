@@ -1,47 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Navbar } from "@/components/site/Navbar";
-import { Footer } from "@/components/site/Footer";
-import { WhatsAppWidget } from "@/components/site/WhatsAppWidget";
-import { BackToTop } from "@/components/site/BackToTop";
-import { PageLoader } from "@/components/site/PageLoader";
-import { Hero } from "@/components/sections/Hero";
-import { WorkStrip } from "@/components/sections/WorkStrip";
-import { About } from "@/components/sections/About";
-import { Founder } from "@/components/sections/Founder";
-import { Services } from "@/components/sections/Services";
-import { Process } from "@/components/sections/Process";
-import { Projects } from "@/components/sections/Projects";
-import { Transformation } from "@/components/sections/Transformation";
-import { Burbs } from "@/components/sections/Burbs";
-import { Testimonials } from "@/components/sections/Testimonials";
-import { CtaBand } from "@/components/sections/CtaBand";
-import { WhyUs } from "@/components/sections/WhyUs";
-import { Community } from "@/components/sections/Community";
-import { EnquiryForm } from "@/components/sections/EnquiryForm";
-import { Faq } from "@/components/sections/Faq";
-import { Contact } from "@/components/sections/Contact";
-import { company, SITE_URL } from "@/lib/site-data";
 
-const title = "Champs Construction | Build Your House in Zimbabwe from the Diaspora";
+import { About } from "@/components/sections/About";
+import { Burbs } from "@/components/sections/Burbs";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
+import { Hero } from "@/components/sections/Hero";
+import { Services } from "@/components/sections/Services";
+import { Team } from "@/components/sections/Team";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { WhyUs } from "@/components/sections/WhyUs";
+import { WorkStrip } from "@/components/sections/WorkStrip";
+import { SiteShell } from "@/components/site/SiteShell";
+import { company, SITE_URL } from "@/lib/site-data";
+import { canonical, pageMeta } from "@/lib/seo";
+
+const title = "Champs Construction | Building Partners You Can Trust";
 const description =
-  "Turnkey home construction in Zimbabwe for the diaspora and local clients. Champs Construction handles planning, materials, construction and handover in Harare and beyond, with weekly progress reports at every stage.";
+  "Turnkey home construction in Zimbabwe. Champs Construction handles planning, materials, building and handover in Harare and beyond, with one accountable team from quotation to keys.";
 const keywords =
-  "construction company Harare, build house in Zimbabwe from diaspora, diaspora home construction Zimbabwe, Chivhu stands, The Burbs Chivhu, Champs Construction";
+  "construction company Harare, home builders Zimbabwe, turnkey construction Zimbabwe, build a house in Zimbabwe, Chivhu stands, Champs Construction";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { name: "keywords", content: keywords },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: SITE_URL },
-      { name: "twitter:title", content: title },
-      { name: "twitter:description", content: description },
-    ],
-    links: [{ rel: "canonical", href: SITE_URL }],
+    meta: pageMeta({ title, description, path: "/", keywords }),
+    links: canonical("/"),
     scripts: [
       {
         type: "application/ld+json",
@@ -52,10 +34,11 @@ export const Route = createFileRoute("/")({
           slogan: company.tagline,
           description,
           url: SITE_URL,
-          logo: `${SITE_URL}/logo.svg`,
-          image: `${SITE_URL}/og-image.png`,
+          logo: `${SITE_URL}${company.logo}`,
+          image: `${SITE_URL}${company.ogImage}`,
           telephone: ["+263713796159", "+263773975415"],
           email: company.email,
+          founder: { "@type": "Person", name: "Mr. R Gwenyambira" },
           areaServed: "Zimbabwe",
           address: {
             "@type": "PostalAddress",
@@ -70,32 +53,24 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/**
+ * The home page is a shop window, not the whole shop: each section is a teaser
+ * that sends the reader to the page that covers it properly. The long-form
+ * content lives on /services, /projects and /about so those pages can rank.
+ */
 function Index() {
   return (
-    <>
-      <PageLoader />
-      <Navbar />
-      <main>
-        <Hero />
-        <WorkStrip />
-        <About />
-        <Founder />
-        <Services />
-        <Process />
-        <Projects />
-        <Transformation />
-        <Burbs />
-        <Testimonials />
-        <CtaBand />
-        <WhyUs />
-        <Community />
-        <EnquiryForm />
-        <Faq />
-        <Contact />
-      </main>
-      <Footer />
-      <WhatsAppWidget />
-      <BackToTop />
-    </>
+    <SiteShell>
+      <Hero />
+      <WorkStrip />
+      <About />
+      <Services />
+      <FeaturedProjects />
+      <Team />
+      <Burbs />
+      <Testimonials />
+      <CtaBand />
+      <WhyUs />
+    </SiteShell>
   );
 }

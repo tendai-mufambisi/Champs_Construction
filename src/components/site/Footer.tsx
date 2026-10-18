@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Mail, MapPin, MessageCircle, Phone, Users } from "lucide-react";
-import logo from "@/assets/champs-logo.svg";
+
 import { company, navLinks, services } from "@/lib/site-data";
 import { useContact } from "./use-site-data";
 
@@ -17,7 +17,7 @@ export function Footer() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
           <div>
             <img
-              src={logo}
+              src={company.logo}
               alt={company.name}
               width={734}
               height={206}
@@ -26,7 +26,7 @@ export function Footer() {
             />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/65">
               Harare-based residential construction for Zimbabweans at home and in the diaspora.
-              From materials to keys in your hands, with weekly progress reports.
+              From materials to the keys in your hands. Building partners you can trust.
             </p>
             <p className="mt-5 font-display text-xl font-semibold text-accent-gold">
               {company.tagline}
@@ -57,8 +57,8 @@ export function Footer() {
             <h3 className="text-sm font-bold tracking-[0.2em] text-white uppercase">Quick Links</h3>
             <ul className="mt-5 space-y-3 text-sm text-white/65">
               {navLinks.map((l) => (
-                <li key={l.hash}>
-                  <Link to="/" hash={l.hash} className="transition-colors hover:text-accent-gold">
+                <li key={l.to}>
+                  <Link to={l.to} className="transition-colors hover:text-accent-gold">
                     {l.label}
                   </Link>
                 </li>

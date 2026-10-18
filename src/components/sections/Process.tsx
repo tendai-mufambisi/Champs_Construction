@@ -16,7 +16,7 @@ export function Process() {
         <SectionHeading
           eyebrow="How It Works"
           title="Your Build, Step by Step"
-          subtitle="Six clear stages, with weekly photo and progress reports throughout, so you always know what happens next — wherever you are."
+          subtitle="Six clear stages, each one signed off before the next begins, so you always know what happens next."
           tone="dark"
         />
 

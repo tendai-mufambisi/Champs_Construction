@@ -11,7 +11,7 @@ export function WhyUs() {
         <SectionHeading
           eyebrow="Why Champs"
           title="Building from abroad, without the stress"
-          subtitle="We know the stories. That is why every Champs build runs on one accountable team and weekly reports you can see for yourself."
+          subtitle="We know the stories. That is why every Champs build runs on one accountable team and work you can come and inspect for yourself."
         />
 
         <div className="mt-16 grid gap-6 md:grid-cols-2">

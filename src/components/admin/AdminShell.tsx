@@ -1,23 +1,17 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import {
-  ExternalLink,
-  Images,
-  Inbox,
-  LayoutDashboard,
-  LogOut,
-  MessageSquareQuote,
-  Settings,
-} from "lucide-react";
+import { ExternalLink, FolderOpen, Images, Inbox, LayoutDashboard, LogOut, MessageSquareQuote, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
 
 import logo from "@/assets/champs-logo.svg";
 import { logout } from "@/data/auth";
-import type { ProjectRecord } from "@/data/site-data";
+import type { WorkPhotoRecord } from "@/data/site-data";
 
 const nav = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/enquiries", label: "Enquiries", icon: Inbox, exact: false },
-  { to: "/admin/projects", label: "Projects", icon: Images, exact: false },
+  { to: "/admin/projects", label: "Projects", icon: FolderOpen, exact: false },
+  { to: "/admin/photos", label: "Site Photos", icon: Images, exact: false },
+  { to: "/admin/team", label: "Team", icon: Users, exact: false },
   { to: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote, exact: false },
   { to: "/admin/settings", label: "Settings", icon: Settings, exact: false },
 ] as const;
@@ -40,7 +34,7 @@ export function ProjectThumb({
   project,
   className = "admin-thumb",
 }: {
-  project: ProjectRecord;
+  project: WorkPhotoRecord;
   className?: string;
 }) {
   return <img className={className} src={project.src} alt="" loading="lazy" decoding="async" />;

@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import { useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 
 import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
 import { errorText, imageForm, prepareImage } from "@/components/admin/prepare-image";
@@ -8,9 +8,16 @@ import {
   removeFounderPhoto,
   saveSettings,
   uploadFounderPhoto,
+  removeCompanyProfile,
+  saveToggles,
+  uploadCompanyProfile,
 } from "@/data/admin";
 import { changeAdminPassword, checkAuth } from "@/data/auth";
-import { FOUNDER_PLACEHOLDER_SRC, FOUNDER_QUOTE_PLACEHOLDER } from "@/data/site-data";
+import {
+  FOUNDER_PLACEHOLDER_SRC,
+  FOUNDER_QUOTE_PLACEHOLDER,
+  type SiteToggles,
+} from "@/data/site-data";
 import { adminSeo } from "@/lib/admin-seo";
 import { statLabels } from "@/lib/site-data";
 
@@ -203,6 +210,8 @@ function SettingsAdmin() {
       </form>
 
       <FounderPhoto current={settings.founder.photo?.src ?? null} />
+      <SectionToggles toggles={settings.toggles} />
+      <CompanyProfile current={settings.toggles.companyProfilePdf} />
       <ChangePassword />
     </AdminShell>
   );
@@ -269,6 +278,139 @@ function FounderPhoto({ current }: { current: string | null }) {
             </button>
           )}
         </div>
+        <Feedback error={state.error} saved={state.saved} />
+      </div>
+    </AdminCard>
+  );
+}
+
+/**
+ * Sections the owner can switch off. The Burbs is a land offering rather than
+ * construction work, so it is the one most likely to come and go; switching it
+ * off hides the section without losing the details already captured.
+ */
+function SectionToggles({ toggles }: { toggles: SiteToggles }) {
+  const router = useRouter();
+  const [value, setValue] = useState({
+    burbsEnabled: toggles.burbsEnabled,
+    teamEnabled: toggles.teamEnabled,
+  });
+  const [state, setState] = useState({ busy: false, error: "", saved: "" });
+
+  async function save(event: FormEvent) {
+    event.preventDefault();
+    setState({ busy: true, error: "", saved: "" });
+    try {
+      await saveToggles({ data: value });
+      await router.invalidate();
+      setState({ busy: false, error: "", saved: "Saved." });
+    } catch (e) {
+      setState({ busy: false, error: errorText(e), saved: "" });
+    }
+  }
+
+  return (
+    <AdminCard
+      title="Website sections"
+      description="Turn a whole section of the website on or off. Nothing is deleted."
+    >
+      <form onSubmit={save} className="admin-form">
+        <div className="admin-check-grid">
+          <label className="admin-check">
+            <input
+              type="checkbox"
+              checked={value.burbsEnabled}
+              onChange={(e) => setValue({ ...value, burbsEnabled: e.target.checked })}
+            />
+            Show &ldquo;The Burbs, Chivhu&rdquo; stands section
+          </label>
+          <label className="admin-check">
+            <input
+              type="checkbox"
+              checked={value.teamEnabled}
+              onChange={(e) => setValue({ ...value, teamEnabled: e.target.checked })}
+            />
+            Show &ldquo;Meet the team&rdquo; section
+          </label>
+        </div>
+        <Feedback error={state.error} saved={state.saved} />
+        <button type="submit" className="admin-btn admin-btn-primary" disabled={state.busy}>
+          {state.busy ? "Saving…" : "Save sections"}
+        </button>
+      </form>
+    </AdminCard>
+  );
+}
+
+/**
+ * The downloadable company profile. While none is uploaded the download button
+ * stays hidden on the website rather than linking to nothing.
+ */
+function CompanyProfile({ current }: { current: string }) {
+  const router = useRouter();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [state, setState] = useState({ busy: false, error: "", saved: "" });
+
+  async function run(action: () => Promise<unknown>, saved: string) {
+    setState({ busy: true, error: "", saved: "" });
+    try {
+      await action();
+      await router.invalidate();
+      setState({ busy: false, error: "", saved });
+    } catch (e) {
+      setState({ busy: false, error: errorText(e), saved: "" });
+    }
+    if (fileInput.current) fileInput.current.value = "";
+  }
+
+  async function onPick(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const form = new FormData();
+    form.append("file", file);
+    await run(() => uploadCompanyProfile({ data: form }), "Company profile uploaded.");
+  }
+
+  return (
+    <AdminCard
+      title="Company profile"
+      description="A PDF visitors can download. The button only appears on the website once a file is uploaded."
+    >
+      <div className="admin-form">
+        {current ? (
+          <p>
+            <a href={current} target="_blank" rel="noreferrer">
+              View the current company profile
+            </a>
+          </p>
+        ) : (
+          <p>No company profile uploaded yet, so the download button is hidden.</p>
+        )}
+
+        <div className="admin-actions">
+          <label className="admin-btn admin-btn-primary">
+            {current ? "Replace PDF" : "Upload PDF"}
+            <input
+              ref={fileInput}
+              type="file"
+              accept="application/pdf"
+              disabled={state.busy}
+              onChange={onPick}
+              className="sr-only"
+            />
+          </label>
+          {current ? (
+            <button
+              type="button"
+              className="admin-btn admin-btn-small"
+              disabled={state.busy}
+              onClick={() => run(() => removeCompanyProfile(), "Company profile removed.")}
+            >
+              Remove
+            </button>
+          ) : null}
+        </div>
+
         <Feedback error={state.error} saved={state.saved} />
       </div>
     </AdminCard>

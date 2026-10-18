@@ -16,6 +16,70 @@
   --animate-marquee: marquee 32s linear infinite;
 }
 
+/* ---- page loader: "the build" ---- */
+
+/* The logo is revealed bottom-to-top, the way a wall goes up. */
+@keyframes loader-rise {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(14px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+/* Each brick drops into its course. */
+@keyframes loader-brick {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px) scaleY(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(2px) scaleY(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+/* A single highlight sweeping across the mark once it is up. */
+@keyframes loader-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+@keyframes loader-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The overlay parts like a curtain instead of simply fading. */
+@keyframes loader-lift-top {
+  to {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes loader-lift-bottom {
+  to {
+    transform: translateY(101%);
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -118,14 +182,16 @@
 :root {
   --radius: 0.875rem;
 
-  /* Champs brand: charcoal #1E1E1E / #2A2A2A with construction yellow #F2E400.
-     Yellow is for fills, highlights and text on dark; on yellow, text is charcoal.
+  /* Champs brand: charcoal #1E1E1E / #2A2A2A with the logo's amber #FEA501.
+     Sampled straight from the supplied logo artwork -- the previous value was a
+     yellow-green (#F2E400) from the placeholder logo and was not the brand colour.
+     Amber is for fills, highlights and text on dark; on amber, text is charcoal.
      (The token names are kept from the original theme so components stay unchanged.) */
   --brand: oklch(0.32 0 0);
   --brand-deep: oklch(0.285 0 0);
   --brand-ink: oklch(0.235 0 0);
-  --accent-gold: oklch(0.901 0.191 105.1);
-  --accent-gold-soft: oklch(0.948 0.142 103.1);
+  --accent-gold: oklch(0.792 0.170 71.0);
+  --accent-gold-soft: oklch(0.847 0.147 79.8);
   --surface: oklch(0.972 0.004 106.5);
 
   --background: oklch(1 0 0);
@@ -140,7 +206,7 @@
   --secondary-foreground: oklch(0.285 0 0);
   --muted: oklch(0.955 0.004 106.5);
   --muted-foreground: oklch(0.48 0 0);
-  --accent: oklch(0.901 0.191 105.1);
+  --accent: oklch(0.792 0.170 71.0);
   --accent-foreground: oklch(0.235 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
@@ -154,7 +220,7 @@
     var(--brand-deep) 55%,
     oklch(0.36 0 0)
   );
-  --gradient-accent: linear-gradient(120deg, var(--accent-gold), oklch(0.93 0.17 100));
+  --gradient-accent: linear-gradient(120deg, var(--accent-gold), oklch(0.716 0.155 69.9));
   /* Keeps the hero copy legible on the left while letting the photo show on the right. */
   --gradient-overlay: linear-gradient(
     100deg,
