@@ -1,11 +1,12 @@
 // The owner-editable part of the site: project photos, testimonials, contact details,
-// founder, stats and The Burbs details. D1 holds the live copy; everything here is the
+// founder, stats and the stands developments. D1 holds the live copy; everything here is the
 // FALLBACK used when D1 is unreachable (and mirrors the seed in migrations/0002_seed.sql).
 // Pure module: no server imports, safe in the browser.
 
 import {
-  burbsDefaults,
   company,
+  developmentDefaults,
+  type DevelopmentKey,
   statLabels,
   testimonialPlaceholders,
   whatsappText,
@@ -57,7 +58,8 @@ export type StatKey = (typeof statLabels)[number]["key"];
 /** Empty string = not confirmed yet, shown as "[X]". */
 export type StatsSettings = Record<StatKey, string>;
 
-export type BurbsSettings = typeof burbsDefaults;
+export type DevelopmentSettings = (typeof developmentDefaults)[DevelopmentKey];
+export type DevelopmentsSettings = Record<DevelopmentKey, DevelopmentSettings>;
 
 /** A project with its own page at /projects/<slug>. */
 export type ProjectRecord = {
@@ -97,6 +99,7 @@ export type TeamMember = {
 /** Sections the owner can switch off, and the uploaded company profile. */
 export type SiteToggles = {
   burbsEnabled: boolean;
+  mcmEnabled: boolean;
   teamEnabled: boolean;
   /** '/media/…' to the PDF, or '' while none is uploaded. */
   companyProfilePdf: string;
@@ -106,7 +109,7 @@ export type SiteData = {
   contact: ContactSettings;
   founder: FounderSettings;
   stats: StatsSettings;
-  burbs: BurbsSettings;
+  developments: DevelopmentsSettings;
   /** Visible Before/During/After photos only, in display order. */
   workPhotos: WorkPhotoRecord[];
   /** Published projects, in display order. Each has its own page. */
@@ -280,11 +283,11 @@ export const FALLBACK_SITE_DATA: SiteData = {
     },
   },
   stats: { homes: "", diaspora: "", years: "" },
-  burbs: burbsDefaults,
+  developments: developmentDefaults,
   workPhotos: FALLBACK_PROJECTS,
   projects: [],
   team: FALLBACK_TEAM,
-  toggles: { burbsEnabled: true, teamEnabled: true, companyProfilePdf: "" },
+  toggles: { burbsEnabled: true, mcmEnabled: true, teamEnabled: true, companyProfilePdf: "" },
   testimonials: [],
   live: false,
 };

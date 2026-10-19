@@ -1,9 +1,10 @@
+import { developmentKeys } from "@/lib/site-data";
 import { getDb, getMedia } from "./bindings.server";
 import {
   FALLBACK_SITE_DATA,
   stages,
-  type BurbsSettings,
   type ContactSettings,
+  type DevelopmentsSettings,
   type FounderSettings,
   type PhotoData,
   type ProjectRecord,
@@ -191,22 +192,31 @@ export function statsFrom(settings: Map<string, string>): StatsSettings {
   };
 }
 
-export function burbsFrom(settings: Map<string, string>): BurbsSettings {
-  const fallback = FALLBACK_SITE_DATA.burbs;
-  return {
-    location: settings.get("burbs_location") || fallback.location,
-    standSize: settings.get("burbs_stand_size") || fallback.standSize,
-    cashPlan: settings.get("burbs_cash_plan") || fallback.cashPlan,
-    termsPlan: settings.get("burbs_terms_plan") || fallback.termsPlan,
-    noDeposit: settings.get("burbs_no_deposit") === "1",
-    legalStatus: settings.get("burbs_legal_status") || fallback.legalStatus,
-  };
+/** Settings keys are prefixed with the development, e.g. burbs_cash_plan, mcm_cash_plan. */
+export function developmentsFrom(settings: Map<string, string>): DevelopmentsSettings {
+  const result = {} as DevelopmentsSettings;
+  for (const key of developmentKeys) {
+    const fallback = FALLBACK_SITE_DATA.developments[key];
+    const get = (name: string) => settings.get(`${key}_${name}`);
+    result[key] = {
+      location: get("location") || fallback.location,
+      standSize: get("stand_size") || fallback.standSize,
+      cashPlan: get("cash_plan") ?? fallback.cashPlan,
+      // The plans may be cleared on purpose to take one off the site.
+      depositPlan: get("deposit_plan") ?? fallback.depositPlan,
+      termsPlan: get("terms_plan") ?? fallback.termsPlan,
+      noDeposit: get("no_deposit") === "1",
+      legalStatus: get("legal_status") || fallback.legalStatus,
+    };
+  }
+  return result;
 }
 
 /** A missing toggle defaults to on, so a fresh database shows the full site. */
 export function togglesFrom(settings: Map<string, string>): SiteToggles {
   return {
     burbsEnabled: (settings.get("burbs_enabled") ?? "1") === "1",
+    mcmEnabled: (settings.get("mcm_enabled") ?? "1") === "1",
     teamEnabled: (settings.get("team_enabled") ?? "1") === "1",
     companyProfilePdf: settings.get("company_profile_pdf") ?? "",
   };
@@ -237,7 +247,7 @@ export async function loadSiteData(): Promise<SiteData> {
     contact: contactFrom(settings),
     founder: founderFrom(settings),
     stats: statsFrom(settings),
-    burbs: burbsFrom(settings),
+    developments: developmentsFrom(settings),
     workPhotos: workPhotos.results.map(toWorkPhoto),
     projects: projects.results.map(toProject),
     team: team.results.map(toTeamMember),

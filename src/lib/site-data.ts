@@ -220,20 +220,70 @@ export const process = [
   },
 ];
 
-// The Burbs, Chivhu. Editable in the dashboard; these are the fallback values.
-// "No deposit, no interest" stays hidden until the client confirms it and switches it on.
-export const burbsDefaults = {
-  location: "5 km from Chivhu City Centre, along Murambinda Road",
-  standSize: "300 sqm",
-  cashPlan: "$8,000 spread over 12 months",
-  termsPlan: "$200/month for 5 years",
-  noDeposit: false,
-  legalStatus:
-    "Parent deed verified on file. Subdivision permit currently processing with the local council. Stands are not yet pegged.",
+// Residential stands Champs sells. The figures are editable in the dashboard; these are
+// the fallback values. "No deposit, no interest" stays hidden until the client confirms
+// it and switches it on. An empty plan is left off the site.
+export type DevelopmentKey = "burbs" | "mcm";
+
+export const developmentKeys: DevelopmentKey[] = ["burbs", "mcm"];
+
+export const developmentDefaults: Record<
+  DevelopmentKey,
+  {
+    location: string;
+    standSize: string;
+    cashPlan: string;
+    depositPlan: string;
+    termsPlan: string;
+    noDeposit: boolean;
+    legalStatus: string;
+  }
+> = {
+  burbs: {
+    location: "3 km from Chivhu City Centre, along Murambinda Road",
+    standSize: "300 sqm",
+    cashPlan: "$8,000, paid within 12 months",
+    depositPlan: "At least $2,000 down, balance within 12 months",
+    termsPlan: "$200/month for 5 years",
+    noDeposit: false,
+    legalStatus:
+      "Parent deed verified on file. Subdivision permit currently processing with the local council. Stands are not yet pegged.",
+  },
+  mcm: {
+    location: "5 minutes from Marondera CBD",
+    standSize: "300 sqm (252 sqm on the monthly plan)",
+    cashPlan: "$18,000, and you start building straight away",
+    depositPlan: "$6,000 down, balance within 12 months. Start building once 50% is paid",
+    termsPlan: "$250/month for 12 years (252 sqm stand)",
+    noDeposit: false,
+    legalStatus:
+      "Privately owned land with a parent deed and a subdivision permit. Stands are pegged.",
+  },
 };
 
-export const burbsEnquiryText =
-  "Hi Champs Construction, I'm interested in a stand at The Burbs, Chivhu. Please send me more details.";
+/** Fixed copy for each development; only the figures above are editable. */
+export const developmentInfo: Record<
+  DevelopmentKey,
+  { name: string; town: string; badge: string; noteTitle: string; note: string }
+> = {
+  burbs: {
+    name: "The Burbs",
+    town: "Chivhu",
+    badge: "Pre-development pricing",
+    noteTitle: "Why buy now",
+    note: "Pre-development pricing locks in a lower entry price ahead of expected increases once pegging, council approvals and roads are complete.",
+  },
+  mcm: {
+    name: "MCM Estates",
+    town: "Marondera",
+    badge: "Pegged stands",
+    noteTitle: "Once you pay",
+    note: "You receive your agreement of sale and your stand is allocated straight away.",
+  },
+};
+
+export const developmentEnquiryText = (key: DevelopmentKey) =>
+  `Hi Champs Construction, I'm interested in a stand at ${developmentInfo[key].name}, ${developmentInfo[key].town}. Please send me more details.`;
 
 // Shown until real testimonials are added in the dashboard. Never replace these with
 // made-up reviews.
@@ -270,7 +320,7 @@ export const faqs = [
   },
   {
     q: "I don't have a stand yet. Can you help?",
-    a: "You can enquire about The Burbs, Chivhu, the new residential development featured on this page. Please read its legal status, shown in full in that section, before you reserve.",
+    a: "Yes. We sell residential stands at The Burbs, Chivhu and MCM Estates, Marondera, both featured on this page with cash, deposit and monthly plans. Please read each development's legal status, shown in full in that section, before you reserve.",
   },
   {
     q: "How do I get started?",

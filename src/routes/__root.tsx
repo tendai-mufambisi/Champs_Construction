@@ -73,7 +73,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   // One read of the owner-editable data (projects, testimonials, contacts, founder,
-  // stats, The Burbs), shared by every component through useSiteData().
+  // stats, stands), shared by every component through useSiteData().
   loader: () => getSiteData(),
   // Reuse it across in-app navigation; a full page load always fetches fresh data.
   staleTime: 5 * 60 * 1000,

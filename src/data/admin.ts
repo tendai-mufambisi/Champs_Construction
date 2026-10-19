@@ -1,12 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { developmentKeys } from "@/lib/site-data";
+
 import { requireAdmin } from "./auth.server";
 import { getDb, getMedia } from "./bindings.server";
 import { enquiryStatuses, type EnquiryRecord, type EnquiryStatus } from "./enquiry";
 import {
   stages,
-  type BurbsSettings,
   type ContactSettings,
+  type DevelopmentsSettings,
   type FounderSettings,
   type WorkPhotoRecord,
   type SiteToggles,
@@ -15,9 +17,9 @@ import {
   type TestimonialRecord,
 } from "./site-data";
 import {
-  burbsFrom,
   contactFrom,
   deleteMediaObjects,
+  developmentsFrom,
   founderFrom,
   WORK_PHOTO_COLUMNS,
   readSettings,
@@ -392,7 +394,7 @@ export type AdminSettings = {
   contact: ContactSettings;
   founder: FounderSettings;
   stats: StatsSettings;
-  burbs: BurbsSettings;
+  developments: DevelopmentsSettings;
   toggles: SiteToggles;
 };
 
@@ -404,7 +406,7 @@ export const adminGetSettings = createServerFn({ method: "GET" }).handler(
       contact: contactFrom(settings),
       founder: founderFrom(settings),
       stats: statsFrom(settings),
-      burbs: burbsFrom(settings),
+      developments: developmentsFrom(settings),
       toggles: togglesFrom(settings),
     };
   },
@@ -415,7 +417,7 @@ export type SettingsInput = {
   founderName: string;
   founderQuote: string;
   stats: StatsSettings;
-  burbs: BurbsSettings;
+  developments: DevelopmentsSettings;
 };
 
 const digits = (v: string) => v.replace(/\D/g, "");
@@ -454,7 +456,6 @@ export const saveSettings = createServerFn({ method: "POST" })
     // Stats stay empty until confirmed; the site shows "[X]" for an empty one.
     const stat = (v: string) => v.trim().slice(0, 12);
     const text = (v: string, max: number) => v.trim().slice(0, max);
-    const b = data.burbs;
 
     await writeSettings([
       ["phone", phone],
@@ -468,12 +469,18 @@ export const saveSettings = createServerFn({ method: "POST" })
       ["stat_homes", stat(data.stats.homes)],
       ["stat_diaspora", stat(data.stats.diaspora)],
       ["stat_years", stat(data.stats.years)],
-      ["burbs_location", text(b.location, 160)],
-      ["burbs_stand_size", text(b.standSize, 60)],
-      ["burbs_cash_plan", text(b.cashPlan, 120)],
-      ["burbs_terms_plan", text(b.termsPlan, 120)],
-      ["burbs_no_deposit", b.noDeposit ? "1" : "0"],
-      ["burbs_legal_status", text(b.legalStatus, 600)],
+      ...developmentKeys.flatMap((key): [string, string][] => {
+        const d = data.developments[key];
+        return [
+          [`${key}_location`, text(d.location, 160)],
+          [`${key}_stand_size`, text(d.standSize, 60)],
+          [`${key}_cash_plan`, text(d.cashPlan, 120)],
+          [`${key}_deposit_plan`, text(d.depositPlan, 120)],
+          [`${key}_terms_plan`, text(d.termsPlan, 120)],
+          [`${key}_no_deposit`, d.noDeposit ? "1" : "0"],
+          [`${key}_legal_status`, text(d.legalStatus, 600)],
+        ];
+      }),
     ]);
   });
 
@@ -513,7 +520,7 @@ export const removeFounderPhoto = createServerFn({ method: "POST" }).handler(
 
 const MAX_PDF_BYTES = 25 * 1024 * 1024; // 25 MB
 
-export type SiteTogglesInput = { burbsEnabled: boolean; teamEnabled: boolean };
+export type SiteTogglesInput = { burbsEnabled: boolean; mcmEnabled: boolean; teamEnabled: boolean };
 
 export const saveToggles = createServerFn({ method: "POST" })
   .inputValidator((input: SiteTogglesInput) => input)
@@ -521,6 +528,7 @@ export const saveToggles = createServerFn({ method: "POST" })
     await requireAdmin();
     await writeSettings([
       ["burbs_enabled", data.burbsEnabled ? "1" : "0"],
+      ["mcm_enabled", data.mcmEnabled ? "1" : "0"],
       ["team_enabled", data.teamEnabled ? "1" : "0"],
     ]);
   });

@@ -101,7 +101,7 @@ function Dashboard() {
               Add a client testimonial
             </Link>
             <Link to="/admin/settings" className="admin-btn">
-              <Settings size={17} aria-hidden="true" /> Contacts, founder, stats & The Burbs
+              <Settings size={17} aria-hidden="true" /> Contacts, founder, stats & stands
             </Link>
             <a href="/#projects" target="_blank" rel="noreferrer" className="admin-btn">
               View the Projects section

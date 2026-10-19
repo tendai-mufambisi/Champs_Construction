@@ -14,7 +14,12 @@ export const countries = [
   "New Zealand",
   "Other",
 ] as const;
-export const standOptions = ["Yes", "No", "Interested in The Burbs"] as const;
+export const standOptions = [
+  "Yes",
+  "No",
+  "Interested in The Burbs",
+  "Interested in MCM Estates",
+] as const;
 export const buildTypes = [
   "New house",
   "Extension",

@@ -16,10 +16,11 @@ import { changeAdminPassword, checkAuth } from "@/data/auth";
 import {
   FOUNDER_PLACEHOLDER_SRC,
   FOUNDER_QUOTE_PLACEHOLDER,
+  type DevelopmentSettings,
   type SiteToggles,
 } from "@/data/site-data";
 import { adminSeo } from "@/lib/admin-seo";
-import { statLabels } from "@/lib/site-data";
+import { developmentInfo, developmentKeys, statLabels } from "@/lib/site-data";
 
 export const Route = createFileRoute("/admin/settings")({
   loader: async () => {
@@ -67,20 +68,17 @@ function SettingsAdmin() {
     settings.founder.quote === FOUNDER_QUOTE_PLACEHOLDER ? "" : settings.founder.quote,
   );
   const [stats, setStats] = useState(settings.stats);
-  const [burbs, setBurbs] = useState(settings.burbs);
+  const [developments, setDevelopments] = useState(settings.developments);
   const [state, setState] = useState({ busy: false, error: "", saved: "" });
 
   const setC = (key: keyof typeof contact) => (e: { target: { value: string } }) =>
     setContact((c) => ({ ...c, [key]: e.target.value }));
-  const setB =
-    (key: Exclude<keyof typeof burbs, "noDeposit">) => (e: { target: { value: string } }) =>
-      setBurbs((b) => ({ ...b, [key]: e.target.value }));
 
   async function save(event: FormEvent) {
     event.preventDefault();
     setState({ busy: true, error: "", saved: "" });
     try {
-      await saveSettings({ data: { contact, founderName, founderQuote, stats, burbs } });
+      await saveSettings({ data: { contact, founderName, founderQuote, stats, developments } });
       await router.invalidate();
       setState({ busy: false, error: "", saved: "Saved. The website is updated." });
     } catch (e) {
@@ -91,7 +89,7 @@ function SettingsAdmin() {
   return (
     <AdminShell
       title="Settings"
-      description="Contact details, founder, stats and The Burbs. Changes show on the website as soon as you save."
+      description="Contact details, founder, stats and stands. Changes show on the website as soon as you save."
     >
       <form onSubmit={save} className="admin-editor">
         <AdminCard
@@ -170,36 +168,14 @@ function SettingsAdmin() {
           </div>
         </AdminCard>
 
-        <AdminCard
-          title="The Burbs, Chivhu"
-          description="The featured development. Keep the legal status accurate and up to date: it is shown in full on the site."
-        >
-          <div className="admin-form">
-            <Field label="Location">
-              <input value={burbs.location} onChange={setB("location")} maxLength={160} />
-            </Field>
-            <Field label="Stand size">
-              <input value={burbs.standSize} onChange={setB("standSize")} maxLength={60} />
-            </Field>
-            <Field label="Cash plan">
-              <input value={burbs.cashPlan} onChange={setB("cashPlan")} maxLength={120} />
-            </Field>
-            <Field label="Terms plan">
-              <input value={burbs.termsPlan} onChange={setB("termsPlan")} maxLength={120} />
-            </Field>
-            <Field label="Legal status">
-              <textarea value={burbs.legalStatus} onChange={setB("legalStatus")} maxLength={600} />
-            </Field>
-            <label className="admin-check">
-              <input
-                type="checkbox"
-                checked={burbs.noDeposit}
-                onChange={(e) => setBurbs((b) => ({ ...b, noDeposit: e.target.checked }))}
-              />
-              Show “No deposit · No interest” (only once confirmed)
-            </label>
-          </div>
-        </AdminCard>
+        {developmentKeys.map((key) => (
+          <DevelopmentFields
+            key={key}
+            title={`${developmentInfo[key].name}, ${developmentInfo[key].town}`}
+            value={developments[key]}
+            onChange={(next) => setDevelopments((d) => ({ ...d, [key]: next }))}
+          />
+        ))}
 
         <Feedback error={state.error} saved={state.saved} />
         <div className="admin-actions">
@@ -214,6 +190,57 @@ function SettingsAdmin() {
       <CompanyProfile current={settings.toggles.companyProfilePdf} />
       <ChangePassword />
     </AdminShell>
+  );
+}
+
+/** The editable figures for one stands development. */
+function DevelopmentFields({
+  title,
+  value,
+  onChange,
+}: {
+  title: string;
+  value: DevelopmentSettings;
+  onChange: (next: DevelopmentSettings) => void;
+}) {
+  const set =
+    (key: Exclude<keyof DevelopmentSettings, "noDeposit">) => (e: { target: { value: string } }) =>
+      onChange({ ...value, [key]: e.target.value });
+
+  return (
+    <AdminCard
+      title={title}
+      description="Stands for sale. Keep the legal status accurate and up to date: it is shown in full on the site."
+    >
+      <div className="admin-form">
+        <Field label="Location">
+          <input value={value.location} onChange={set("location")} maxLength={160} />
+        </Field>
+        <Field label="Stand size">
+          <input value={value.standSize} onChange={set("standSize")} maxLength={60} />
+        </Field>
+        <Field label="Cash plan" hint="Leave empty to hide this plan.">
+          <input value={value.cashPlan} onChange={set("cashPlan")} maxLength={120} />
+        </Field>
+        <Field label="Deposit plan" hint="Leave empty to hide this plan.">
+          <input value={value.depositPlan} onChange={set("depositPlan")} maxLength={120} />
+        </Field>
+        <Field label="Monthly plan" hint="Leave empty to hide this plan.">
+          <input value={value.termsPlan} onChange={set("termsPlan")} maxLength={120} />
+        </Field>
+        <Field label="Legal status">
+          <textarea value={value.legalStatus} onChange={set("legalStatus")} maxLength={600} />
+        </Field>
+        <label className="admin-check">
+          <input
+            type="checkbox"
+            checked={value.noDeposit}
+            onChange={(e) => onChange({ ...value, noDeposit: e.target.checked })}
+          />
+          Show “No deposit · No interest” (only once confirmed)
+        </label>
+      </div>
+    </AdminCard>
   );
 }
 
@@ -285,14 +312,15 @@ function FounderPhoto({ current }: { current: string | null }) {
 }
 
 /**
- * Sections the owner can switch off. The Burbs is a land offering rather than
- * construction work, so it is the one most likely to come and go; switching it
+ * Sections the owner can switch off. The stands are a land offering rather than
+ * construction work, so they are the most likely to come and go; switching it
  * off hides the section without losing the details already captured.
  */
 function SectionToggles({ toggles }: { toggles: SiteToggles }) {
   const router = useRouter();
   const [value, setValue] = useState({
     burbsEnabled: toggles.burbsEnabled,
+    mcmEnabled: toggles.mcmEnabled,
     teamEnabled: toggles.teamEnabled,
   });
   const [state, setState] = useState({ busy: false, error: "", saved: "" });
@@ -322,7 +350,15 @@ function SectionToggles({ toggles }: { toggles: SiteToggles }) {
               checked={value.burbsEnabled}
               onChange={(e) => setValue({ ...value, burbsEnabled: e.target.checked })}
             />
-            Show &ldquo;The Burbs, Chivhu&rdquo; stands section
+            Show &ldquo;The Burbs, Chivhu&rdquo; stands
+          </label>
+          <label className="admin-check">
+            <input
+              type="checkbox"
+              checked={value.mcmEnabled}
+              onChange={(e) => setValue({ ...value, mcmEnabled: e.target.checked })}
+            />
+            Show &ldquo;MCM Estates, Marondera&rdquo; stands
           </label>
           <label className="admin-check">
             <input
