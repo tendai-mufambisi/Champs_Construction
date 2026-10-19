@@ -19,8 +19,8 @@ export const Route = createFileRoute("/labour-only")({
       title,
       description,
       path: "/labour-only",
-      image: "/images/work/brickwork.jpg",
-      imageAlt: "Champs builders on a brick wall rising from the foundations",
+      image: "/images/people/ceiling-crew.jpg",
+      imageAlt: "The Champs crew fitting a ceiling inside a house under construction",
       keywords:
         "labour only builders Zimbabwe, labour only contract Harare, builders for hire Zimbabwe, bricklayers Harare, milestone pricing construction",
     }),
@@ -70,11 +70,11 @@ function LabourOnlyPage() {
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
           <Reveal>
             <img
-              src="/images/work/brickwork.jpg"
-              alt="Champs builders on a brick wall rising from the foundations"
+              src="/images/people/ceiling-crew.jpg"
+              alt="The Champs crew fitting a ceiling inside a house under construction"
               loading="lazy"
-              width={1000}
-              height={750}
+              width={1600}
+              height={1200}
               className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-lift"
             />
           </Reveal>

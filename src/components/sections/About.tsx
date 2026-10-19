@@ -27,11 +27,11 @@ export function About() {
           <div className="relative pb-10">
             <Reveal>
               <img
-                src="/images/projects/bulawayo/team.jpg"
-                alt="The Champs Construction team in hard hats and safety overalls on site"
+                src="/images/people/team-on-slab.jpg"
+                alt="The Champs Construction team in hard hats and orange overalls on a new foundation slab"
                 loading="lazy"
-                width={1000}
-                height={750}
+                width={1280}
+                height={720}
                 className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-lift"
               />
             </Reveal>

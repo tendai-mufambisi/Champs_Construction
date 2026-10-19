@@ -14,9 +14,9 @@ const slides = [
     position: "50% 55%",
   },
   {
-    src: "/images/projects/executive/roofing.jpg",
-    alt: "Champs roofers fixing red roof sheets on a large brick house",
-    position: "50% 50%",
+    src: "/images/people/ceiling-crew.jpg",
+    alt: "The Champs crew fitting a ceiling inside a house under construction",
+    position: "50% 40%",
   },
   {
     src: "/images/projects/executive/team.jpg",
@@ -24,13 +24,13 @@ const slides = [
     position: "50% 35%",
   },
   {
-    src: "/images/projects/mvurwi/roofing.jpg",
-    alt: "Builders fixing the roof on a Champs house under construction",
-    position: "50% 45%",
+    src: "/images/people/plans-review.jpg",
+    alt: "The Champs team reviewing a site plan together on a client's stand",
+    position: "50% 40%",
   },
   {
-    src: "/images/projects/family-home/side.jpg",
-    alt: "A completed Champs family home with cream walls and dark aluminium windows",
+    src: "/images/projects/executive/roofing.jpg",
+    alt: "Champs roofers fixing red roof sheets on a large brick house",
     position: "50% 50%",
   },
 ];

@@ -11,7 +11,7 @@ export function Services() {
     <section id="services" className="relative overflow-hidden bg-brand-ink">
       {/* The photo sits behind the whole section, cards included. A light, even
           overlay keeps it clear; the cards carry their own tint for legibility. */}
-      <ParallaxBg src="/images/projects/bulawayo/inspection.jpg" position="50% 50%" />
+      <ParallaxBg src="/images/people/truss-inspection.jpg" position="50% 50%" />
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-b from-brand-ink/85 via-brand-ink/60 to-brand-ink/80"

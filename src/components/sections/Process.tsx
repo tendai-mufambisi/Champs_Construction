@@ -6,7 +6,7 @@ import { process } from "@/lib/site-data";
 export function Process() {
   return (
     <section id="how-it-works" className="relative overflow-hidden bg-brand-ink py-24 lg:py-32">
-      <ParallaxBg src="/images/projects/mvurwi/roofed-shell.jpg" position="50% 50%" />
+      <ParallaxBg src="/images/people/plans-review.jpg" position="50% 50%" />
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-b from-brand-ink/80 via-brand-ink/60 to-brand-ink/85"
