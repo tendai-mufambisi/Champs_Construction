@@ -19,7 +19,12 @@ const pillars = [
   },
 ];
 
-export function About() {
+/**
+ * `intro` leads with the owner's "Building partners you can trust" copy. The home
+ * page shows it here; /about already opens with it in the page header, so there
+ * the section keeps its own heading rather than repeating it.
+ */
+export function About({ intro = true }: { intro?: boolean }) {
   return (
     <section id="about" className="relative overflow-hidden bg-white py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -59,16 +64,26 @@ export function About() {
             <Reveal>
               <span className="eyebrow text-brand">
                 <span className="h-[3px] w-8 rounded-full bg-accent-gold" aria-hidden />
-                About Champs Construction
+                {intro ? "About Us" : "About Champs Construction"}
               </span>
             </Reveal>
             <Reveal delay={80}>
               <h2 className="mt-4 text-3xl leading-tight font-semibold text-brand-ink sm:text-4xl lg:text-5xl">
-                From Groundwork to Handover. Built With Integrity.
+                {intro
+                  ? "Building partners you can trust."
+                  : "From Groundwork to Handover. Built With Integrity."}
               </h2>
             </Reveal>
             <Reveal delay={140}>
               <div className="mt-6 space-y-4 leading-relaxed text-muted-foreground">
+                {intro ? (
+                  <p className="font-medium text-brand-ink">
+                    Building in Zimbabwe while you're abroad should come with confidence, not
+                    uncertainty. At Champs Construction, we combine dependable workmanship,
+                    transparent project management and clear, consistent updates, so you stay
+                    informed at every stage, wherever you are.
+                  </p>
+                ) : null}
                 <p>
                   Champs Construction is a premier Harare residential builder dedicated to turning
                   your vision into a turnkey home. Whether you are based locally or in the diaspora,

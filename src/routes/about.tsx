@@ -62,7 +62,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <About />
+      <About intro={false} />
       <Founder />
       <Team />
       <WhyUs />
