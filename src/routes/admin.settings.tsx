@@ -322,6 +322,7 @@ function SectionToggles({ toggles }: { toggles: SiteToggles }) {
     burbsEnabled: toggles.burbsEnabled,
     mcmEnabled: toggles.mcmEnabled,
     teamEnabled: toggles.teamEnabled,
+    testimonialsEnabled: toggles.testimonialsEnabled,
   });
   const [state, setState] = useState({ busy: false, error: "", saved: "" });
 
@@ -367,6 +368,14 @@ function SectionToggles({ toggles }: { toggles: SiteToggles }) {
               onChange={(e) => setValue({ ...value, teamEnabled: e.target.checked })}
             />
             Show &ldquo;Meet the team&rdquo; section
+          </label>
+          <label className="admin-check">
+            <input
+              type="checkbox"
+              checked={value.testimonialsEnabled}
+              onChange={(e) => setValue({ ...value, testimonialsEnabled: e.target.checked })}
+            />
+            Show &ldquo;Client testimonials&rdquo; section
           </label>
         </div>
         <Feedback error={state.error} saved={state.saved} />

@@ -520,7 +520,12 @@ export const removeFounderPhoto = createServerFn({ method: "POST" }).handler(
 
 const MAX_PDF_BYTES = 25 * 1024 * 1024; // 25 MB
 
-export type SiteTogglesInput = { burbsEnabled: boolean; mcmEnabled: boolean; teamEnabled: boolean };
+export type SiteTogglesInput = {
+  burbsEnabled: boolean;
+  mcmEnabled: boolean;
+  teamEnabled: boolean;
+  testimonialsEnabled: boolean;
+};
 
 export const saveToggles = createServerFn({ method: "POST" })
   .inputValidator((input: SiteTogglesInput) => input)
@@ -530,6 +535,7 @@ export const saveToggles = createServerFn({ method: "POST" })
       ["burbs_enabled", data.burbsEnabled ? "1" : "0"],
       ["mcm_enabled", data.mcmEnabled ? "1" : "0"],
       ["team_enabled", data.teamEnabled ? "1" : "0"],
+      ["testimonials_enabled", data.testimonialsEnabled ? "1" : "0"],
     ]);
   });
 

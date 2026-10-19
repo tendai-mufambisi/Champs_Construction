@@ -101,6 +101,8 @@ export type SiteToggles = {
   burbsEnabled: boolean;
   mcmEnabled: boolean;
   teamEnabled: boolean;
+  /** Off until the owner has real reviews to show. */
+  testimonialsEnabled: boolean;
   /** '/media/…' to the PDF, or '' while none is uploaded. */
   companyProfilePdf: string;
 };
@@ -287,7 +289,13 @@ export const FALLBACK_SITE_DATA: SiteData = {
   workPhotos: FALLBACK_PROJECTS,
   projects: [],
   team: FALLBACK_TEAM,
-  toggles: { burbsEnabled: true, mcmEnabled: true, teamEnabled: true, companyProfilePdf: "" },
+  toggles: {
+    burbsEnabled: true,
+    mcmEnabled: true,
+    teamEnabled: true,
+    testimonialsEnabled: false,
+    companyProfilePdf: "",
+  },
   testimonials: [],
   live: false,
 };

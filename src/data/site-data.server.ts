@@ -218,6 +218,8 @@ export function togglesFrom(settings: Map<string, string>): SiteToggles {
     burbsEnabled: (settings.get("burbs_enabled") ?? "1") === "1",
     mcmEnabled: (settings.get("mcm_enabled") ?? "1") === "1",
     teamEnabled: (settings.get("team_enabled") ?? "1") === "1",
+    // The exception: testimonials stay hidden until the owner switches them on.
+    testimonialsEnabled: settings.get("testimonials_enabled") === "1",
     companyProfilePdf: settings.get("company_profile_pdf") ?? "",
   };
 }

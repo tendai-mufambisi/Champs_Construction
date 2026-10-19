@@ -2,6 +2,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Images, Inbox, MessageSquareQuote, Plus, Settings } from "lucide-react";
 
 import { AdminCard, AdminShell } from "@/components/admin/AdminShell";
+import { useSiteData } from "@/components/site/use-site-data";
 import { adminListEnquiries, adminListWorkPhotos, adminListTestimonials } from "@/data/admin";
 import { checkAuth } from "@/data/auth";
 import { isPlaceholder } from "@/data/site-data";
@@ -26,6 +27,7 @@ function Dashboard() {
   const fresh = enquiries.filter((e) => e.status === "New");
   const placeholders = projects.filter((p) => isPlaceholder(p.src) && !p.hidden).length;
   const liveTestimonials = testimonials.filter((t) => !t.hidden).length;
+  const { toggles } = useSiteData();
 
   return (
     <AdminShell
@@ -51,7 +53,9 @@ function Dashboard() {
           <strong>{liveTestimonials}</strong>
           <span>
             Testimonials on the website
-            {liveTestimonials === 0 && " (placeholders showing)"}
+            {!toggles.testimonialsEnabled
+              ? " (section switched off in Settings)"
+              : liveTestimonials === 0 && " (placeholders showing)"}
           </span>
         </Link>
       </div>

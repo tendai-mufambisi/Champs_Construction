@@ -5,10 +5,11 @@ import { SectionHeading } from "@/components/site/SectionHeading";
 import { useSiteData } from "@/components/site/use-site-data";
 import { testimonialPlaceholders } from "@/data/site-data";
 
-// Real reviews are added by the owner in /admin/testimonials. Until then the clearly
-// marked placeholders show. Stars only appear on real testimonials.
+// Real reviews are added by the owner in /admin/testimonials. The section is off until
+// switched on in /admin/settings; if it is on with no reviews, the clearly marked
+// placeholders show. Stars only appear on real testimonials.
 export function Testimonials() {
-  const { testimonials: live } = useSiteData();
+  const { testimonials: live, toggles } = useSiteData();
   const isLive = live.length > 0;
   const testimonials = isLive ? live : testimonialPlaceholders;
   const [active, setActive] = useState(0);
@@ -18,6 +19,9 @@ export function Testimonials() {
     const t = setInterval(() => setActive((a) => (a + 1) % testimonials.length), 7000);
     return () => clearInterval(t);
   }, [testimonials.length]);
+
+  // Hidden until the owner switches it on in /admin/settings.
+  if (!toggles.testimonialsEnabled) return null;
 
   const current = Math.min(active, testimonials.length - 1);
 
