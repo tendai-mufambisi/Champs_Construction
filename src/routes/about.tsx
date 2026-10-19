@@ -48,14 +48,15 @@ function AboutPage() {
           </Reveal>
           <Reveal delay={80}>
             <h1 className="mt-4 max-w-3xl text-4xl leading-[1.08] font-semibold text-white sm:text-5xl lg:text-6xl">
-              Building partners you can trust
+              Building partners you can trust.
             </h1>
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-              Everyone has heard the story of the build that stalled, the money that went missing
-              and the owner who could never get a straight answer. Champs Construction exists to be
-              the opposite of that.
+              Building in Zimbabwe while you're abroad should come with confidence, not uncertainty.
+              At Champs Construction, we combine dependable workmanship, transparent project
+              management and clear, consistent updates, so you stay informed at every stage,
+              wherever you are.
             </p>
           </Reveal>
         </div>
