@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { About } from "@/components/sections/About";
-import { Community } from "@/components/sections/Community";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { Founder } from "@/components/sections/Founder";
 import { Team } from "@/components/sections/Team";
@@ -67,7 +66,6 @@ function AboutPage() {
       <Team />
       <WhyUs />
       <Testimonials />
-      <Community />
       <CtaBand />
     </SiteShell>
   );

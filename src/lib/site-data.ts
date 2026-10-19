@@ -117,7 +117,7 @@ export const comparison = {
       "One accountable team",
       "Your build managed on the ground",
       "Transparent progress",
-      "Fixed written quotations",
+      "Legally binding contractual agreement",
       "Keys on handover",
     ],
   },

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Facebook, Globe, Mail, MapPin, MessageCircle, Phone, Users } from "lucide-react";
+import { Facebook, Globe, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { useContact } from "@/components/site/use-site-data";
@@ -95,15 +95,6 @@ export function Contact() {
                 >
                   <Facebook className="h-4 w-4" />
                   Champs Construction
-                </a>
-                <a
-                  href={contact.community}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold transition hover:-translate-y-0.5 hover:bg-accent-gold hover:text-brand-ink"
-                >
-                  <Users className="h-4 w-4" />
-                  WhatsApp Community
                 </a>
               </div>
             </div>

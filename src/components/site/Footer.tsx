@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Mail, MapPin, MessageCircle, Phone, Users } from "lucide-react";
+import { Facebook, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { company, navLinks, services } from "@/lib/site-data";
 import { useContact } from "./use-site-data";
@@ -122,16 +122,6 @@ export function Footer() {
                 <span>{company.address}</span>
               </li>
             </ul>
-
-            <a
-              href={contact.community}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent-gradient px-5 py-3 text-sm font-bold text-brand-ink shadow-accent transition-transform duration-300 hover:-translate-y-0.5"
-            >
-              <Users className="h-4 w-4" />
-              Join our WhatsApp Community
-            </a>
           </div>
         </div>
 

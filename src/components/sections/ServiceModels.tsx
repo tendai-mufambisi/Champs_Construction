@@ -18,7 +18,7 @@ export function ServiceModels() {
         <SectionHeading
           eyebrow="How We Can Work With You"
           title="Three ways to build with Champs"
-          subtitle="Choose the service that matches your budget and how involved you want to be. Every option comes with the same accountable team and honest reporting."
+          subtitle="Choose the service that matches your budget and how involved you want to be. Every option comes with the same accountable team and a weekly progress report system."
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
